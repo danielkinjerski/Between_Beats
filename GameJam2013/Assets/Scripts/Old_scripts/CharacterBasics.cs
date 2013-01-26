@@ -11,7 +11,7 @@ public class CharacterBasics : MonoBehaviour
     #region Variables
 
     private float speed, targetSpeed;
-    private Vector3 direction, force, velocity, respawn, initialPos, initialRot;
+    public Vector3 direction, force, velocity, respawn, initialPos, initialRot;
     public float jumpHeight, maxSpeed = 8, accelerationSpeed = 1f, gravity = 20;
 	public string walk = "Walking", idle = "Standing", fall = "Default Take", jump = "Jump";
 	public bool attacking = false, falling = false, jumping = false;
@@ -52,10 +52,10 @@ public class CharacterBasics : MonoBehaviour
         if (!controller.isGrounded)
         {
             RaycastHit hit;
-            Vector3 down = new Vector3(trans.position.x, trans.position.y - 2f, trans.position.z);
-            Debug.DrawLine(trans.position, down, Color.cyan);
+            //Vector3 down = new Vector3(trans.position.x, trans.position.y - 2f, trans.position.z);
+            Debug.DrawLine(trans.position, -Vector3.up, Color.cyan);
 
-            if (!Physics.Raycast(trans.position, Vector3.down, out hit, 2f) && !jumping)
+            if (!Physics.Raycast(trans.position, -Vector3.up, out hit, 2f) && !jumping)
             {
 
             }
@@ -164,17 +164,20 @@ public class CharacterBasics : MonoBehaviour
 
         //This is our "friction"
         speed = Mathf.Lerp(speed, targetSpeed, accelerationSpeed);
-
+        force = Vector3.Lerp(force, Vector3.zero, .01f);
 
         //If we've got a signification magnitude, continue moving forward ;; if were are recieving movement, apply it 
         direction = (speed > .9f) ? new Vector3(moveDir.x * speed, _holdTheJump, moveDir.z * speed)
                                               : new Vector3(trans.forward.x * speed, _holdTheJump, trans.forward.z * speed);
+
         //apply gravity
         Gravity();
 
         float currentHeight = 0;
         if(_holdTheJump>0)
             currentHeight = trans.position.y;
+
+        direction += force;
 
         controller.Move(direction * Time.deltaTime);
 
