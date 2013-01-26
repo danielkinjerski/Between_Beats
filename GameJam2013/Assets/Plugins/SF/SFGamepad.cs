@@ -58,7 +58,7 @@ public class SFGamepad
 	protected SFManager SFMgr;
 	protected double HorizontalAxisThresholdD = 0.5;
 	protected double VerticalAxisThresholdD = 0.5;
-    protected float RepeatTimerThresholdF = .5f;
+    protected float RepeatTimerThresholdF = .15f;
 
     public SFGamepad() { }
 
@@ -211,7 +211,6 @@ public class SFGamepad
                     if (Gamepads[a].Joysticks[b].UpKeyPressed)
                     {
                         SFMgr.HandleKeyUpEvent(SFKey.Code.Up, 0, Gamepads[a].controllerIndex);
-                        Gamepads[a].Joysticks[b].UpKeyPressed = false;
                     }
                 }
             }

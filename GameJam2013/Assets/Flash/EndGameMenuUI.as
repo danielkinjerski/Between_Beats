@@ -8,7 +8,7 @@
 	import flash.events.MouseEvent;
 	
 	
-	public class EndGameMenuUI extends MovieClip {
+	public class EndGameMenuUI extends UIMenu {
 		
 		public var mainMenuBtn:Button;
 		public var exitGameBtn:Button;
@@ -20,7 +20,9 @@
 			
 			GUI_UTILS.MakeButton(mainMenuBtn, OnMainMenuButtonClick);
 			GUI_UTILS.MakeButton(exitGameBtn, OnExitButtonClick);
-
+			
+			buttonList = [mainMenuBtn, exitGameBtn];
+			UpdateFocussedButton();
 		}
 		
 		
@@ -40,6 +42,18 @@
 			//
 			(root as UIManager).ExitGame();
 			(root as UIManager).CloseEndGameMenu();
+		}
+		
+		public function HandelConfirm()
+		{
+			if (mainMenuBtn.state == "over")
+			{
+				OnMainMenuButtonClick(null);
+			}
+			else if (exitGameBtn.state == "over")
+			{
+				OnExitButtonClick(null);
+			}
 		}
 		
 	}

@@ -51,6 +51,7 @@
 			{
 				_mainMenu.visible = true;
 			}
+			//GUI_UTILS.SetFocusOnButton(_mainMenu.startButton);
 			CloseHUD();
 		}
 		public function CloseMainMenu()
@@ -72,6 +73,7 @@
 			else {
 				_pauseMenu.visible = true;
 			}
+			//GUI_UTILS.SetFocusOnButton(_pauseMenu.resumeGameBtn);
 		}
 		public function ClosePauseMenu()
 		{
@@ -93,7 +95,7 @@
 			{
 				_endGameMenu.visible = true;
 			}
-			
+			//GUI_UTILS.SetFocusOnButton(_endGameMenu.mainMenuBtn);
 			CloseHUD();
 		}
 		public function CloseEndGameMenu()
@@ -138,6 +140,39 @@
 		public function PauseGame()
 		{
 			OpenPauseMenu();
+		}
+		
+		public function ConfirmPressed(menuOpened:String)
+		{
+			switch(menuOpened)
+			{
+				
+				case "OpeningWindow":
+					_mainMenu.HandelConfirm();
+					break;
+				case "GameOver":
+					_endGameMenu.HandelConfirm();
+					break;
+				case "Pause":
+					_pauseMenu.HandelConfirm();
+					break;
+			}
+		}
+		
+		public function HandelScrollPress(menuOpened:String, delta:int )
+		{
+			switch(menuOpened)
+			{
+				case "OpeningWindow":
+					_mainMenu.UpdateButtonIndex(delta);
+					break;
+				case "GameOver":
+					_endGameMenu.UpdateButtonIndex(delta);
+					break;
+				case "Pause":
+					_pauseMenu.UpdateButtonIndex(delta);
+					break;
+			}
 		}
 		
 	}

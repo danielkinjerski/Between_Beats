@@ -18,7 +18,6 @@ public class UI_Scene_HUD : Movie
 		{
 		//	SetBackgroundAlpha(1);
 		}
-		
 		// 
 	}
 	
@@ -38,7 +37,6 @@ public class UI_Scene_HUD : Movie
 	// Callback from the content that provides a reference to the MainMenu object once it's fully loaded.
 	public void OnRegisterSWFCallback(Value movieRef)
 	{
-		Debug.Log("UI_Scene_MainMenu::OnRegisterSWFCallback()");
 		hudMovie = movieRef;
 		Console.WriteLine("mainmenu type = " + hudMovie.type);
 		Init();
@@ -58,7 +56,6 @@ public class UI_Scene_HUD : Movie
 	
 	public void OnStartButtonClick()
 	{
-		Debug.Log("START GAME HAS BEEN CLICKED");
 		GManager.Play();
 		
 	}
@@ -66,7 +63,6 @@ public class UI_Scene_HUD : Movie
 	// Callback from the content to launch the game when the "close" animation has finished playing.
 	public void OnExitGameCallback()
 	{
-		Console.WriteLine("In OnExitGameCallback");
 		sfMgr.DestroyMovie(this);
 		// Application.Quit() is Ignored in the editor!
 		OpenHUD();
@@ -77,20 +73,16 @@ public class UI_Scene_HUD : Movie
 	
 	public void ExitGame()
 	{
-		Debug.Log("THE GAME WILL NOW EXIT");
 		OnExitGameCallback();
 	}
 	
 	public void OnMainMenuClick()
 	{
-		Debug.Log("Go to main menu");	
 		GManager.BackToMain();
 	}
 	
 	public void OnResumeGameButtonClick()
 	{
-		Debug.Log("Resume clicked");
-		
 		GManager.ResumeGame();
 	}
 	
@@ -130,6 +122,21 @@ public class UI_Scene_HUD : Movie
 	public void CloseEndGameMenu()
 	{
 		Invoke("root.CloseEndGameMenu", null, 0);
+	}
+	
+	public void HandelConfirmPress(string tempStr)
+	{
+		Value frameVal = new Value(tempStr, MovieID);
+        Value[] args = { frameVal };
+		Invoke("root.ConfirmPressed", args, 1);
+	}
+	
+	public void HandelScrollPress(string tempStr, float delta)
+	{
+		Value frameVal = new Value(tempStr, MovieID);
+		Value adjust = new Value(delta, MovieID);
+        Value[] args = { frameVal, adjust };
+		Invoke("root.HandelScrollPress", args, 2);
 	}
 		
 	
