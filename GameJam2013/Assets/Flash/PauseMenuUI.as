@@ -41,6 +41,7 @@
 		{
 			(root as UIManager).MainMenu();
 			(root as UIManager).ClosePauseMenu();
+			(root as UIManager).OpenMainMenu();
 		}
 		
 		

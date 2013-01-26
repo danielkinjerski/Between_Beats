@@ -29,6 +29,7 @@
 			//
 			(root as UIManager).MainMenu();
 			(root as UIManager).CloseEndGameMenu();
+			(root as UIManager).OpenMainMenu();
 		}
 		
 		

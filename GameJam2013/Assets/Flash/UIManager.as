@@ -40,8 +40,7 @@
 		
 		public function Init()
 		{
-			//OpenMainMenu();
-			OpenPauseMenu();
+			OpenMainMenu();
 		}
 		
 		public function OpenMainMenu()
