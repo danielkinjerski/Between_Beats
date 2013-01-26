@@ -35,18 +35,21 @@ public class LoopScale : MonoBehaviour {
     /// <summary>
     /// this is how far the curve has been traversed
     /// </summary>
-    public float x = .01f;
+    private float x = 0;
 
-    public float speed = .01f;
+    float period = 0;
 
     #endregion
 
-
-    public float max = 300, min = 1;
-    public bool growAndShrink = false, reverse = false;
 	// Use this for initialization
 	void Start () {
         trans = this.transform;
+
+        x = ((1 / b) - c) * 0.0174532925f;
+        print(">>>>>>>>X " + x);
+
+        period = a * Mathf.Sin(b * x + c) + z;
+
 	}
 	
 	
