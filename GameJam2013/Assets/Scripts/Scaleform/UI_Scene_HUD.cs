@@ -42,14 +42,10 @@ public class UI_Scene_HUD : Movie
 		hudMovie = movieRef;
 	}
 
-	// Callback from the content to launch the game when the "close" animation has finished playing.
-	public void OnStartGameCallback()
+	
+	public void OnStartButtonClick()
 	{
-		
-		sfMgr.DestroyMovie(this);
-		//ScaleformCamera sfCamera = Component.FindObjectOfType( typeof(ScaleformCamera) ) as ScaleformCamera;
-		//sfCamera.mainMenu = null;
-		//sfCamera.OnLevelLoadStart();
+		Debug.Log("START GAME HAS BEEN CLICKED");
 	}
 
 	// Callback from the content to launch the game when the "close" animation has finished playing.
@@ -61,6 +57,12 @@ public class UI_Scene_HUD : Movie
 		Application.Quit();
 		// Application.LoadLevelAsync("Level");
 		// Destroy(this); // NFM: Do our Value references need to be cleared? How do we cleanup a movie?
+	}
+	
+	public void ExitGame()
+	{
+		Debug.Log("THE GAME WILL NOW EXIT");
+		OnExitGameCallback();
 	}
 	
 }
