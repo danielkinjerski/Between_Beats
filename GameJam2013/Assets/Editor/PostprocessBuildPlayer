@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+my $installPath = $ARGV[0];
+
+# The type of player built:
+# "dashboard", "standaloneWin32", "standaloneOSXIntel", "standaloneOSXPPC", "standaloneOSXUniversal", "webplayer"
+my $target = $ARGV[1];
+
+if ($target == "iPhone")
+{
+	system ("cp -Rf iOS_Project_Template/Unity-iPhone.xcodeproj/project.pbxproj iOS_Project/Unity-iPhone.xcodeproj/project.pbxproj");
+}
