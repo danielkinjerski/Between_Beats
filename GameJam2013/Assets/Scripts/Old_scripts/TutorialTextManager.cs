@@ -29,7 +29,7 @@ public class TutorialTextManager : MonoBehaviour {
 
         for (int i = 0; i < msg.Count; i++)
         {
-            if (index > msg.Count || (i == 3 && GameManager.currentPlayMode == CurrentPlayMode.Grey))
+            if (index > msg.Count || (i == 3))
             {
                 isFinished = true;
             }
