@@ -46,7 +46,6 @@ public class LoopScale : MonoBehaviour {
         trans = this.transform;
 
         x = ((1 / b) - c) * 0.0174532925f;
-        print(">>>>>>>>X " + x);
 
         period = a * Mathf.Sin(b * x + c) + z;
 

@@ -32,8 +32,7 @@ public class ScaleformGamePad : SFGamepad
 					Gamepads[a].Joysticks[b].VerticalAxisThresholdD = joystickVertThresholdDefault;
 				}
 				
-				
-				if(Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) < 0)
+				if(/*Gamepads[a].Joysticks[b].DownKeyPressed*/Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) < 0)
 				{
 					if(downKeyReleased)
 					{
@@ -46,7 +45,7 @@ public class ScaleformGamePad : SFGamepad
 					downKeyReleased = true;
 				}
 				
-				if(Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) > 0)
+				if(/*Gamepads[a].Joysticks[b].UpKeyPressed*/Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) > 0)
 				{
 					if(upKeyReleased)
 					{
