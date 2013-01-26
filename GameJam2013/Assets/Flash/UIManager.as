@@ -25,9 +25,6 @@
 			
 		}
 		
-		
-		
-		
 		public function UIManager() 
 		{
 			if(_UIManager != null)
@@ -54,6 +51,7 @@
 			{
 				_mainMenu.visible = true;
 			}
+			CloseHUD();
 		}
 		public function CloseMainMenu()
 		{
@@ -95,6 +93,8 @@
 			{
 				_endGameMenu.visible = true;
 			}
+			
+			CloseHUD();
 		}
 		public function CloseEndGameMenu()
 		{
@@ -120,7 +120,7 @@
 		{
 			if (_hudUI != null)
 			{
-				_hudUI.visible = true;
+				_hudUI.visible = false;
 			}
 		}
 		

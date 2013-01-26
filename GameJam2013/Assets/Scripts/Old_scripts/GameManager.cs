@@ -63,18 +63,20 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region UI Events
-    void BackToMain()
+    public void BackToMain()
     {
         Application.LoadLevel(Application.loadedLevel);
 		scaleFormCamera.hud.OpenMainMenu();
+		gameState = GameState.OpeningWindow;
     }
-    void Quit()
+    public void Quit()
     {
         Application.Quit();
     }
-    void Play()
+    public void Play()
     {
         gameState = GameState.PlayGame;
+		scaleFormCamera.hud.OpenHUD();
     }
     void TogglePause()
     {
@@ -94,7 +96,7 @@ public class GameManager : MonoBehaviour
 	{
 		gameState = GameState.PlayGame;
 	}
-    void GameOver()
+    public void GameOver()
     {
         gameState = GameState.GameOver;
 		scaleFormCamera.hud.OpenEndGameMenu();
