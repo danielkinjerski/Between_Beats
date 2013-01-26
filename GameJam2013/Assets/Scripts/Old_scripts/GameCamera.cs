@@ -35,9 +35,9 @@ public class GameCamera : MonoBehaviour
 
 
 	// Use this for initialization
-	void Start ()
+	void Initialize ()
 	{
-        playerTarget = GameObject.Find("Player");
+        playerTarget = GameObject.FindWithTag("Player");
         // Find all game objects with tag "Waypoint"
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         FindClosestWaypoint();
@@ -65,7 +65,8 @@ public class GameCamera : MonoBehaviour
 	{
         if (!target)
         {
-            FindClosestWaypoint();
+            return;
+            //FindClosestWaypoint();
         }
         
 	
