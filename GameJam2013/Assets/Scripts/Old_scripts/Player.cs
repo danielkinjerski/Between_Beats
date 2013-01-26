@@ -11,14 +11,15 @@ public class Player : CharacterBasics {
             return;
 
 
-        BaseMovement(InputMovement(), InputMovement().magnitude );
-		if (Input.GetKeyDown(KeyCode.Space)  || Input.GetKeyDown(KeyCode.JoystickButton1))
+        base.BaseMovement(InputMovement(), InputMovement().magnitude );
+		if (Input.GetButtonDown("Jump"))
 		{
 			base.Launch();
 		}
-        if (Input.GetKeyUp(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton2))
+        if (Input.GetButtonDown("Rush"))
         {
-            //manager.SendMessage("Switch");
+            Debug.Log("RUSH");
+            base.Rush(trans.forward, 10);
         }
 	}
 
