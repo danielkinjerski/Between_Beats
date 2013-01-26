@@ -9,7 +9,7 @@
 	import flash.external.ExternalInterface;
 	
 	
-	public class MainMenuUI extends MovieClip {
+	public class MainMenuUI extends UIMenu {
 		
 		//exit and start
 		public var exitButton:Button;
@@ -24,6 +24,8 @@
 			startButton = this.getChildByName("btn_Start") as Button;
 			GUI_UTILS.MakeButton(exitButton, OnExitButtonClick);
 			GUI_UTILS.MakeButton(startButton, OnStartButtonClick);
+			buttonList = [startButton, exitButton];
+			UpdateFocussedButton();
 		}
 		
 		
@@ -40,6 +42,18 @@
 			//
 			(root as UIManager).ExitGame();
 			(root as UIManager).CloseMainMenu();
+		}
+		
+		public function HandelConfirm()
+		{
+			if (startButton.state == "over")
+			{
+				OnStartButtonClick(null);
+			}
+			else if (exitButton.state == "over")
+			{
+				OnExitButtonClick(null);
+			}
 		}
 	}
 	

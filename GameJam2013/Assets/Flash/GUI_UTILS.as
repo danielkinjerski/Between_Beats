@@ -25,8 +25,14 @@
 		
 		public static function SetFocusOnButton(tempBtn:Button)
 		{
-			trace("SETTING FOCUS");
 			tempBtn.selected = true;
+			tempBtn.setState("over");
+		}
+		
+		public static function RemoveFocusOnButton(tempBtn:Button)
+		{
+			tempBtn.selected = false;
+			tempBtn.setState("up");
 		}
 	}
 	

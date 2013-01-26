@@ -8,9 +8,11 @@ using Scaleform;
 // Note that SFCamera is currently a Singleton as it creates a new SFMgr in Start().
 public class ScaleformCamera : SFCamera {
 	
-	
+	public ScaleformGamePad gamePad;
 	public UI_Scene_HUD				hud				= null;
 	public Boolean gamePaused = false;
+	//protected double VerticalAxisThresholdDefault = 0.5;
+	//protected double VerticalAxisThresholdMenuOpen = 0.1;
 
 	// Initialization related notes:
 	// We have three levels in the game- dummy level, mainmenu level and the main game level. The dummy level
@@ -33,15 +35,26 @@ public class ScaleformCamera : SFCamera {
 	{
 		base.Start();
 		hud = null;
+		gamePad = new ScaleformGamePad(SFMgr);
+		
 		CreateGameHud();
+		gamePad.Init();
+		gamePad.gManager = hud.GManager;
 		hud.SetFocus(true);
 		yield return StartCoroutine("CallPluginAtEndOfFrames");
 		
 	}
 	
-	new public void Update()
+	
+	public void Update()
 	{
-		base.Update();
+		if (SFMgr != null)
+		{
+            gamePad.Update();
+			SFMgr.ProcessCommands();
+			SFMgr.Update();
+			SFMgr.Advance(Time.deltaTime);
+		}
 	}
 	
 
