@@ -6,6 +6,8 @@
     import scaleform.clik.events.ButtonEvent;
     import scaleform.clik.constants.InvalidationType;
     import scaleform.clik.controls.Button;
+	import flash.events.Event;
+	
 	
 	/**
 	 * ...
@@ -17,6 +19,14 @@
 		{
 			tempBtn.addEventListener(MouseEvent.CLICK, func);
 			tempBtn.preventAutosizing = true;
+			tempBtn.tabChildren = true;
+			
+		}
+		
+		public static function SetFocusOnButton(tempBtn:Button)
+		{
+			trace("SETTING FOCUS");
+			tempBtn.selected = true;
 		}
 	}
 	

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Scaleform;
 
 #region Enums
 public enum GameState
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject Character;
     public static GameState gameState = GameState.OpeningWindow;
+	public ScaleformCamera scaleFormCamera;
     private bool toggle;
     public bool cheats;
 
@@ -27,8 +29,18 @@ public class GameManager : MonoBehaviour
 
     private GameManager()
     {
-
+		
     }
+	
+	public void Update()
+	{
+		if (Input.GetKey (KeyCode.Escape)) {
+			if(gameState != GameState.GameOver && gameState != GameState.OpeningWindow)
+			{
+				TogglePause(); 
+			}
+		}
+	}
 
     ~GameManager()
     {
@@ -39,11 +51,12 @@ public class GameManager : MonoBehaviour
 
     #region Mono Inherit Functions
 
-    void Awake () {
+    void Awake () 
+	{
         //gameState = GameState.OpeningWindow;
         Debug.Log("Direct to play, just change to OpeningWindow.");
         gameState = GameState.PlayGame;
-
+		scaleFormCamera = Camera.mainCamera.GetComponent<ScaleformCamera>();
         Debug.Log("Disable all menus");
 	}
 
@@ -53,6 +66,7 @@ public class GameManager : MonoBehaviour
     void BackToMain()
     {
         Application.LoadLevel(Application.loadedLevel);
+		scaleFormCamera.hud.OpenMainMenu();
     }
     void Quit()
     {
@@ -62,13 +76,28 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.PlayGame;
     }
-    void Pause()
+    void TogglePause()
     {
-        gameState = GameState.Pause;
+		if(gameState == GameState.Pause)
+		{
+			gameState = GameState.PlayGame;
+		}
+		else
+		{
+			gameState = GameState.Pause;
+			scaleFormCamera.hud.PauseGame();
+		}
+       
     }
+	
+	public void ResumeGame()
+	{
+		gameState = GameState.PlayGame;
+	}
     void GameOver()
     {
         gameState = GameState.GameOver;
+		scaleFormCamera.hud.OpenEndGameMenu();
     }
     #endregion
 

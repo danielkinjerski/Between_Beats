@@ -34,8 +34,7 @@ public class ScaleformCamera : SFCamera {
 		base.Start();
 		hud = null;
 		CreateGameHud();
-		PauseGame();
-		//hud.OpenEndGameMenu();
+		hud.SetFocus(true);
 		yield return StartCoroutine("CallPluginAtEndOfFrames");
 		
 	}
@@ -43,14 +42,6 @@ public class ScaleformCamera : SFCamera {
 	new public void Update()
 	{
 		base.Update();
-		if(hud != null)
-		{
-			if(hud.pauseMenuOpen && !gamePaused)
-			{
-				//hud.ClosePauseMenu();
-			}
-		}
-		
 	}
 	
 

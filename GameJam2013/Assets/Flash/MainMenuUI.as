@@ -32,12 +32,14 @@
 		{
 			//
 			ExternalInterface.call("OnStartButtonClick");
+			(root as UIManager).CloseMainMenu();
 		}
 		
 		public function OnExitButtonClick(e:MouseEvent)
 		{
 			//
 			(root as UIManager).ExitGame();
+			(root as UIManager).CloseMainMenu();
 		}
 	}
 	

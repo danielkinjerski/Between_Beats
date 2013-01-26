@@ -7,7 +7,7 @@ using Scaleform.GFx;
 public class UI_Scene_HUD : Movie
 {
 	protected Value hudMovie = null;
-	
+	public GameManager gManager;
 	public bool pauseMenuOpen = false;
 	
 	// Required to implement this constructor.
@@ -33,7 +33,7 @@ public class UI_Scene_HUD : Movie
 	
 	public void Init()
 	{
-		 //
+		 
 	}
 
 	// Callback from the content that provides a reference to the MainMenu object once it's fully loaded.
@@ -73,13 +73,16 @@ public class UI_Scene_HUD : Movie
 	public void OnResumeGameButtonClick()
 	{
 		Debug.Log("Resume clicked");
-		pauseMenuOpen = false;
+		if(gManager == null)
+		{
+			gManager = GameObject.Find("GameManager").GetComponent<GameManager>();	
+		}
+		gManager.ResumeGame();
 	}
 	
 	public void PauseGame()
 	{
 		Invoke("root.PauseGame", null, 0);
-		pauseMenuOpen = true;
 	}
 	
 	
@@ -97,6 +100,7 @@ public class UI_Scene_HUD : Movie
 	public void ClosePauseMenu()
 	{
 		Invoke("root.ClosePauseMenu", null, 0);
+		pauseMenuOpen = false;
 	}
 	
 	public void CloseMainMenu()

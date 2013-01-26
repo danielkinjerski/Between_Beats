@@ -40,54 +40,88 @@
 		
 		public function Init()
 		{
-			//OpenMainMenu();
-			OpenPauseMenu();
+			OpenMainMenu();
 		}
 		
 		public function OpenMainMenu()
 		{
-			_mainMenu = new MainMenuUI();
-			this.addChild(_mainMenu);
+			if (_mainMenu == null)
+			{
+				_mainMenu = new MainMenuUI();
+				this.addChild(_mainMenu);
+			}
+			else
+			{
+				_mainMenu.visible = true;
+			}
 		}
 		public function CloseMainMenu()
 		{
-			this.removeChild(_mainMenu);
-			_mainMenu = null;
+			if (_mainMenu != null)
+			{
+				_mainMenu.visible = false;
+			}
 		}
 		
 		public function OpenPauseMenu()
 		{
 			paused = true;
-			_pauseMenu = new PauseMenuUI();
-			this.addChild(_pauseMenu );
+			if (_pauseMenu == null)
+			{
+				_pauseMenu = new PauseMenuUI();
+				this.addChild(_pauseMenu );
+			}
+			else {
+				_pauseMenu.visible = true;
+			}
 		}
 		public function ClosePauseMenu()
 		{
-			this.removeChild(_pauseMenu );
-			_pauseMenu  = null;
+			if (_pauseMenu != null)
+			{
+				_pauseMenu.visible = false;
+			}
 		}
 		
 		
 		public function OpenEndGameMenu()
 		{
-			_endGameMenu = new EndGameMenuUI();
-			this.addChild(_endGameMenu);
+			if (_endGameMenu == null)
+			{
+				_endGameMenu = new EndGameMenuUI();
+				this.addChild(_endGameMenu);
+			}
+			else
+			{
+				_endGameMenu.visible = true;
+			}
 		}
 		public function CloseEndGameMenu()
 		{
-			this.removeChild(_endGameMenu);
-			_endGameMenu = null;
+			if (_endGameMenu != null)
+			{
+				_endGameMenu.visible = false;
+			}
 		}
 		
 		public function OpenHUD()
 		{
-			_hudUI = new HUDUI();
-			this.addChild(_hudUI);
+			if (_hudUI == null)
+			{
+				_hudUI = new HUDUI();
+				this.addChild(_hudUI);
+			}
+			else
+			{
+				_hudUI.visible = true;
+			}
 		}
 		public function CloseHUD()
 		{
-			this.removeChild(_hudUI);
-			_hudUI = null;
+			if (_hudUI != null)
+			{
+				_hudUI.visible = true;
+			}
 		}
 		
 		
