@@ -7,6 +7,10 @@
     import scaleform.clik.controls.Button;
 	import flash.external.ExternalInterface;
 	import flash.events.MouseEvent;
+	import flash.events.Event;
+	import scaleform.clik.events.ButtonEvent;
+	
+
 	
 	public class PauseMenuUI extends MovieClip {
 		
@@ -21,6 +25,8 @@
 			resumeGameBtn = this.getChildByName("btn_ResumeGame") as Button;
 			mainMenuGameBtn = this.getChildByName("btn_MainMenu")as Button;
 			exitGameBtn = this.getChildByName("btn_ExitGame") as Button;
+			
+			GUI_UTILS.SetFocusOnButton(resumeGameBtn);
 			
 			GUI_UTILS.MakeButton(resumeGameBtn, OnResumeGameButtonClick);
 			GUI_UTILS.MakeButton(mainMenuGameBtn, OnMainMenuButtonClick);
