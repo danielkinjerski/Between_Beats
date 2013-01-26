@@ -164,7 +164,8 @@ public class CharacterBasics : MonoBehaviour
 
         //This is our "friction"
         speed = Mathf.Lerp(speed, targetSpeed, accelerationSpeed);
-        force = Vector3.Lerp(force, Vector3.zero, .01f);
+        if(force.magnitude <.03f)
+            force = Vector3.Lerp(force, Vector3.zero, .01f);
 
         //If we've got a signification magnitude, continue moving forward ;; if were are recieving movement, apply it 
         direction = (speed > .9f) ? new Vector3(moveDir.x * speed, _holdTheJump, moveDir.z * speed)
