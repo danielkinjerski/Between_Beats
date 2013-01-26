@@ -74,6 +74,7 @@ public class UI_Scene_HUD : Movie
 	{
 		Debug.Log("Resume clicked");
 		pauseMenuOpen = false;
+		
 	}
 	
 	public void PauseGame()
@@ -97,6 +98,7 @@ public class UI_Scene_HUD : Movie
 	public void ClosePauseMenu()
 	{
 		Invoke("root.ClosePauseMenu", null, 0);
+		pauseMenuOpen = false;
 	}
 	
 	public void CloseMainMenu()

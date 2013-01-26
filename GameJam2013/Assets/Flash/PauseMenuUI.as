@@ -26,26 +26,30 @@
 			mainMenuGameBtn = this.getChildByName("btn_MainMenu")as Button;
 			exitGameBtn = this.getChildByName("btn_ExitGame") as Button;
 			
-			GUI_UTILS.SetFocusOnButton(resumeGameBtn);
+			
 			
 			GUI_UTILS.MakeButton(resumeGameBtn, OnResumeGameButtonClick);
 			GUI_UTILS.MakeButton(mainMenuGameBtn, OnMainMenuButtonClick);
 			GUI_UTILS.MakeButton(exitGameBtn, OnExitButtonClick);
+			
+			GUI_UTILS.SetFocusOnButton(resumeGameBtn);
+			
 		}
 		
 		
 		public function OnMainMenuButtonClick(e:MouseEvent)
 		{
-			//
 			(root as UIManager).MainMenu();
+			(root as UIManager).ClosePauseMenu();
 		}
 		
 		
 		public function OnResumeGameButtonClick(e:MouseEvent)
 		{
-			//
+			trace("RESUME CLICKED");
 			(root as UIManager).paused = false;	
 			ExternalInterface.call("OnResumeGameButtonClick");
+			(root as UIManager).ClosePauseMenu();
 		}
 		
 		
@@ -53,6 +57,7 @@
 		{
 			//
 			(root as UIManager).ExitGame();
+			(root as UIManager).ClosePauseMenu();
 		}
 	}
 	

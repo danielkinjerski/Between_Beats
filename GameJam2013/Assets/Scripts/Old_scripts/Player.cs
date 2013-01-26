@@ -18,7 +18,7 @@ public class Player : CharacterBasics {
 		}
         if (Input.GetKeyUp(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
-            manager.SendMessage("Switch");
+            //manager.SendMessage("Switch");
         }
 	}
 

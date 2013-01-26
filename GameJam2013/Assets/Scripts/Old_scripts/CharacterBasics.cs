@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This is character basics - the basis of all characters
+/// we get animation, game manager updates, gravity, movement
+/// </summary>
 public class CharacterBasics : MonoBehaviour
 {
 
@@ -16,7 +20,7 @@ public class CharacterBasics : MonoBehaviour
 	protected CharacterController controller;
 	protected Animation anim = new Animation();
 	protected SkinnedMeshRenderer mesh;
-    protected GameObject manager;
+    //protected GameObject manager;
 
 	#endregion
 
@@ -32,9 +36,9 @@ public class CharacterBasics : MonoBehaviour
         initialPos = trans.position;
         initialRot = trans.rotation.eulerAngles;
         anim = this.animation;
-        anim[jump].wrapMode = WrapMode.Clamp;
+        if(anim != null)
+            anim[jump].wrapMode = WrapMode.Clamp;
         respawn = transform.position;
-        manager = GameObject.Find("GameManager");
 	}
 
     #endregion
@@ -86,44 +90,47 @@ public class CharacterBasics : MonoBehaviour
     /// <returns>true if we are moving false if we are not</returns>
     public virtual bool BaseMovement(Vector2 input, float speed)
     {
-        #region Animation
-
-        #region Falling
-        if (jumping) { }
-        else if (falling)
+        if (anim != null)
         {
-            if (!anim.IsPlaying(fall))
-                anim.Blend(fall);
-            else if (!anim.isPlaying)
-                anim.Play(fall);
-        }
-        #endregion
+            #region Animation
 
-        #region Walk
-        else if (speed > 0&&!falling&&!jumping)
-        {
-            //if we are coming from idle or run ;; force chance
-            if (!anim.IsPlaying(walk))
-                anim.Play(walk);
-            //if we are already playing out anim ;; wait till its over, then play again
-            else if (!anim.isPlaying)
-                anim.Play(walk);
-        }
-        #endregion
+            #region Falling
+            if (jumping) { }
+            else if (falling)
+            {
+                if (!anim.IsPlaying(fall))
+                    anim.Blend(fall);
+                else if (!anim.isPlaying)
+                    anim.Play(fall);
+            }
+            #endregion
 
-        #region Idle
-        else if (speed == 0 && !falling && !jumping)
-        {
-            //if we are playing any other animation of than idle ;; force chance
-            if (!anim.IsPlaying(idle))
-                anim.CrossFade(idle);
-            //if nothing is playing ;; play again
-            else if (!anim.isPlaying)
-                anim.Play(idle);
-        }
-        #endregion
+            #region Walk
+            else if (speed > 0 && !falling && !jumping)
+            {
+                //if we are coming from idle or run ;; force chance
+                if (!anim.IsPlaying(walk))
+                    anim.Play(walk);
+                //if we are already playing out anim ;; wait till its over, then play again
+                else if (!anim.isPlaying)
+                    anim.Play(walk);
+            }
+            #endregion
 
-        #endregion
+            #region Idle
+            else if (speed == 0 && !falling && !jumping)
+            {
+                //if we are playing any other animation of than idle ;; force chance
+                if (!anim.IsPlaying(idle))
+                    anim.CrossFade(idle);
+                //if nothing is playing ;; play again
+                else if (!anim.isPlaying)
+                    anim.Play(idle);
+            }
+            #endregion
+
+            #endregion
+        }
 
         //build our movement vector
         Vector3 moveDir = new Vector3(input.x,direction.y,input.y);
@@ -180,6 +187,7 @@ public class CharacterBasics : MonoBehaviour
     #endregion
 
     #region Utilities
+
     protected void ForceStopEverything()
     {
         direction = Vector3.zero;
@@ -194,9 +202,9 @@ public class CharacterBasics : MonoBehaviour
         if (!falling&&!jumping)
         {
             direction.y = jumpHeight;
-            //anim.CrossFade(jump, .01f);
             jumping = true;
-            anim.Play(jump);
+            if (anim != null)
+                anim.Play(jump);
         }
 	}
 	
@@ -219,18 +227,18 @@ public class CharacterBasics : MonoBehaviour
 
     void Respawn()
     {
-        if (manager.gameObject.GetComponent<GameManager>().cheats)
-        {
-            this.ForceStopEverything();
-            this.transform.position = respawn;
-        }
-        else
-        {
-            manager.SendMessage("GameOver");
-            trans.position = initialPos;
-            trans.rotation = Quaternion.Euler(initialRot);
-            gameObject.SetActiveRecursively(false);
-        }
+        //if (manager.gameObject.GetComponent<GameManager>().cheats)
+        //{
+        //    this.ForceStopEverything();
+        //    this.transform.position = respawn;
+        //}
+        //else
+        //{
+        //    manager.SendMessage("GameOver");
+        //    trans.position = initialPos;
+        //    trans.rotation = Quaternion.Euler(initialRot);
+        //    gameObject.SetActiveRecursively(false);
+        //}
     }
 
     #endregion
