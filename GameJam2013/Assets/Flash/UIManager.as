@@ -11,6 +11,8 @@
 		public var _endGameMenu:EndGameMenuUI;
 		public var _hudUI:HUDUI;
 		
+		public var paused:Boolean = false;
+		
 		public static function Instance() :UIManager //also known as root.  Also ROOT works better
 		{
 			if(_UIManager == null)
@@ -24,6 +26,8 @@
 		}
 		
 		
+		
+		
 		public function UIManager() 
 		{
 			if(_UIManager != null)
@@ -31,11 +35,13 @@
 				throw new Error("THE UIMANAGER already exists. stupid");
 			}
 			Init();
+			
 		}
 		
 		public function Init()
 		{
-			OpenMainMenu();
+			//OpenMainMenu();
+			OpenPauseMenu();
 		}
 		
 		public function OpenMainMenu()
@@ -51,6 +57,7 @@
 		
 		public function OpenPauseMenu()
 		{
+			paused = true;
 			_pauseMenu = new PauseMenuUI();
 			this.addChild(_pauseMenu );
 		}
@@ -89,6 +96,15 @@
 			ExternalInterface.call("ExitGame");
 		}
 		
+		public function MainMenu()
+		{
+			ExternalInterface.call("OnMainMenuClick");
+		}
+		
+		public function PauseGame()
+		{
+			OpenPauseMenu();
+		}
+		
 	}
-	
 }

@@ -10,7 +10,7 @@ public class ScaleformCamera : SFCamera {
 	
 	
 	public UI_Scene_HUD				hud				= null;
-
+	public Boolean gamePaused = false;
 
 	// Initialization related notes:
 	// We have three levels in the game- dummy level, mainmenu level and the main game level. The dummy level
@@ -34,8 +34,25 @@ public class ScaleformCamera : SFCamera {
 		base.Start();
 		hud = null;
 		CreateGameHud();
+		PauseGame();
+		//hud.OpenEndGameMenu();
 		yield return StartCoroutine("CallPluginAtEndOfFrames");
+		
 	}
+	
+	new public void Update()
+	{
+		base.Update();
+		if(hud != null)
+		{
+			if(hud.pauseMenuOpen && !gamePaused)
+			{
+				//hud.ClosePauseMenu();
+			}
+		}
+		
+	}
+	
 
 	private void CreateGameHud()
 	{
@@ -55,6 +72,16 @@ public class ScaleformCamera : SFCamera {
 		}
 	}
 	
+	public void PauseGame()
+	{
+		gamePaused = true;
+		hud.PauseGame();
+	}
+	
+	public void ResumeGame()
+	{
+		gamePaused = false;
+	}
 	
 
 }
