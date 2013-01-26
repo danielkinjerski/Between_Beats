@@ -37,8 +37,10 @@ public class GameCamera : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		//playerTarget = GameObject.Find("Player");
-		//target = GameObject.Find("Player");
+        playerTarget = GameObject.Find("Player");
+        // Find all game objects with tag "Waypoint"
+        waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+        FindClosestWaypoint();
 	}
 	
 	void Update ()
@@ -61,12 +63,13 @@ public class GameCamera : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate ()
 	{
-		//if (!target)
-		//	return;
+        if (!target)
+        {
+            FindClosestWaypoint();
+        }
         
 	
-		FindClosestWaypoint ();
-		target = closestWaypoint;
+		
 
 		position = target.transform.position;
 
@@ -81,15 +84,11 @@ public class GameCamera : MonoBehaviour
 			float tempZ = target.transform.localRotation.eulerAngles.z;
 			tempZ -= 360;
 		}
-		
-		zoomSpeed = target.GetComponent<CamWaypoint> ().zoomSpeed;
-		lerpSpeed = target.GetComponent<CamWaypoint> ().lerpSpeed;
-		newDistance = target.GetComponent<CamWaypoint> ().newDistance;
 
 		transform.localRotation = Quaternion.Lerp (transform.localRotation, target.transform.localRotation, lerpSpeed / 100);
 		transform.position = playerTarget.transform.position - (transform.rotation * Vector3.forward * distanceFromTarget + vDisplacement);
 		
-		distanceFromTarget = Mathf.Lerp (distanceFromTarget, newDistance, zoomSpeed);
+		distanceFromTarget = Mathf.Lerp (distanceFromTarget, newDistance, zoomSpeed/100);
 
 	}
 	/// <summary>
@@ -98,12 +97,9 @@ public class GameCamera : MonoBehaviour
 	/// <returns>
 	/// The closest waypoint.
 	/// </returns>
-	public GameObject FindClosestWaypoint ()
+	public void FindClosestWaypoint ()
 	{
-		// Find all game objects with tag "Waypoint"
-		waypoints = GameObject.FindGameObjectsWithTag ("Waypoint"); 
-    	
-		var distance = Mathf.Infinity; 
+        var distance = Mathf.Infinity; 
 		//var position = transform.position; 
     	
 		// Iterate through them and find the closest one
@@ -115,8 +111,15 @@ public class GameCamera : MonoBehaviour
 				closestWaypoint = go; 
 				distance = curDistance; 
 			} 
-		} 
-		return closestWaypoint; 
+		}
+        if (target != closestWaypoint)
+        {
+            zoomSpeed = closestWaypoint.GetComponent<CamWaypoint>().zoomSpeed;
+            lerpSpeed = closestWaypoint.GetComponent<CamWaypoint>().lerpSpeed;
+            newDistance = closestWaypoint.GetComponent<CamWaypoint>().newDistance;
+
+            target = closestWaypoint;
+        }
 	}
 	
 	

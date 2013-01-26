@@ -15,6 +15,8 @@
 		public var exitButton:Button;
 		public var startButton:Button;
 		
+		
+		
 		public function MainMenuUI() 
 		{
 			// constructor code
@@ -24,16 +26,20 @@
 			GUI_UTILS.MakeButton(startButton, OnStartButtonClick);
 		}
 		
+		
+		
 		public function OnStartButtonClick(e:MouseEvent)
 		{
 			//
 			ExternalInterface.call("OnStartButtonClick");
+			(root as UIManager).CloseMainMenu();
 		}
 		
 		public function OnExitButtonClick(e:MouseEvent)
 		{
 			//
 			(root as UIManager).ExitGame();
+			(root as UIManager).CloseMainMenu();
 		}
 	}
 	

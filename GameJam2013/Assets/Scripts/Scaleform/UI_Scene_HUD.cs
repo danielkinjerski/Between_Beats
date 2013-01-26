@@ -7,8 +7,8 @@ using Scaleform.GFx;
 public class UI_Scene_HUD : Movie
 {
 	protected Value hudMovie = null;
-	
-	
+	public GameManager gManager;
+	public bool pauseMenuOpen = false;
 	
 	// Required to implement this constructor.
 	public UI_Scene_HUD(SFManager sfmgr, SFMovieCreationParams cp):
@@ -33,7 +33,7 @@ public class UI_Scene_HUD : Movie
 	
 	public void Init()
 	{
-		 //
+		 
 	}
 
 	// Callback from the content that provides a reference to the MainMenu object once it's fully loaded.
@@ -64,5 +64,54 @@ public class UI_Scene_HUD : Movie
 		Debug.Log("THE GAME WILL NOW EXIT");
 		OnExitGameCallback();
 	}
+	
+	public void OnMainMenuClick()
+	{
+		Debug.Log("Go to main menu");	
+	}
+	
+	public void OnResumeGameButtonClick()
+	{
+		Debug.Log("Resume clicked");
+		if(gManager == null)
+		{
+			gManager = GameObject.Find("GameManager").GetComponent<GameManager>();	
+		}
+		gManager.ResumeGame();
+	}
+	
+	public void PauseGame()
+	{
+		Invoke("root.PauseGame", null, 0);
+	}
+	
+	
+	public void OpenMainMenu()
+	{
+		Invoke("root.OpenPauseMenu", null, 0);	
+	}
+	
+	public void OpenEndGameMenu()
+	{
+		Invoke("root.OpenEndGameMenu", null, 0);
+	}
+	
+	
+	public void ClosePauseMenu()
+	{
+		Invoke("root.ClosePauseMenu", null, 0);
+		pauseMenuOpen = false;
+	}
+	
+	public void CloseMainMenu()
+	{
+		Invoke("root.OpenPauseMenu", null, 0);
+	}
+	
+	public void CloseEndGameMenu()
+	{
+		Invoke("root.CloseEndGameMenu", null, 0);
+	}
+		
 	
 }

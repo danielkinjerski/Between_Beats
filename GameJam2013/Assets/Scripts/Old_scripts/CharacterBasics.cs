@@ -1,13 +1,17 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This is character basics - the basis of all characters
+/// we get animation, game manager updates, gravity, movement
+/// </summary>
 public class CharacterBasics : MonoBehaviour
 {
 
     #region Variables
 
     private float speed, targetSpeed;
-    private Vector3 direction, force, velocity, respawn, initialPos, initialRot;
+    public Vector3 direction, force, velocity, respawn, initialPos, initialRot;
     public float jumpHeight, maxSpeed = 8, accelerationSpeed = 1f, gravity = 20;
 	public string walk = "Walking", idle = "Standing", fall = "Default Take", jump = "Jump";
 	public bool attacking = false, falling = false, jumping = false;
@@ -16,7 +20,7 @@ public class CharacterBasics : MonoBehaviour
 	protected CharacterController controller;
 	protected Animation anim = new Animation();
 	protected SkinnedMeshRenderer mesh;
-    protected GameObject manager;
+    //protected GameObject manager;
 
 	#endregion
 
@@ -32,9 +36,9 @@ public class CharacterBasics : MonoBehaviour
         initialPos = trans.position;
         initialRot = trans.rotation.eulerAngles;
         anim = this.animation;
-        anim[jump].wrapMode = WrapMode.Clamp;
+        if(anim != null)
+            anim[jump].wrapMode = WrapMode.Clamp;
         respawn = transform.position;
-        manager = GameObject.Find("GameManager");
 	}
 
     #endregion
@@ -48,10 +52,10 @@ public class CharacterBasics : MonoBehaviour
         if (!controller.isGrounded)
         {
             RaycastHit hit;
-            Vector3 down = new Vector3(trans.position.x, trans.position.y - 2f, trans.position.z);
-            Debug.DrawLine(trans.position, down, Color.cyan);
+            //Vector3 down = new Vector3(trans.position.x, trans.position.y - 2f, trans.position.z);
+            Debug.DrawLine(trans.position, -Vector3.up, Color.cyan);
 
-            if (!Physics.Raycast(trans.position, Vector3.down, out hit, 2f) && !jumping)
+            if (!Physics.Raycast(trans.position, -Vector3.up, out hit, 2f) && !jumping)
             {
 
             }
@@ -86,44 +90,47 @@ public class CharacterBasics : MonoBehaviour
     /// <returns>true if we are moving false if we are not</returns>
     public virtual bool BaseMovement(Vector2 input, float speed)
     {
-        #region Animation
-
-        #region Falling
-        if (jumping) { }
-        else if (falling)
+        if (anim != null)
         {
-            if (!anim.IsPlaying(fall))
-                anim.Blend(fall);
-            else if (!anim.isPlaying)
-                anim.Play(fall);
-        }
-        #endregion
+            #region Animation
 
-        #region Walk
-        else if (speed > 0&&!falling&&!jumping)
-        {
-            //if we are coming from idle or run ;; force chance
-            if (!anim.IsPlaying(walk))
-                anim.Play(walk);
-            //if we are already playing out anim ;; wait till its over, then play again
-            else if (!anim.isPlaying)
-                anim.Play(walk);
-        }
-        #endregion
+            #region Falling
+            if (jumping) { }
+            else if (falling)
+            {
+                if (!anim.IsPlaying(fall))
+                    anim.Blend(fall);
+                else if (!anim.isPlaying)
+                    anim.Play(fall);
+            }
+            #endregion
 
-        #region Idle
-        else if (speed == 0 && !falling && !jumping)
-        {
-            //if we are playing any other animation of than idle ;; force chance
-            if (!anim.IsPlaying(idle))
-                anim.CrossFade(idle);
-            //if nothing is playing ;; play again
-            else if (!anim.isPlaying)
-                anim.Play(idle);
-        }
-        #endregion
+            #region Walk
+            else if (speed > 0 && !falling && !jumping)
+            {
+                //if we are coming from idle or run ;; force chance
+                if (!anim.IsPlaying(walk))
+                    anim.Play(walk);
+                //if we are already playing out anim ;; wait till its over, then play again
+                else if (!anim.isPlaying)
+                    anim.Play(walk);
+            }
+            #endregion
 
-        #endregion
+            #region Idle
+            else if (speed == 0 && !falling && !jumping)
+            {
+                //if we are playing any other animation of than idle ;; force chance
+                if (!anim.IsPlaying(idle))
+                    anim.CrossFade(idle);
+                //if nothing is playing ;; play again
+                else if (!anim.isPlaying)
+                    anim.Play(idle);
+            }
+            #endregion
+
+            #endregion
+        }
 
         //build our movement vector
         Vector3 moveDir = new Vector3(input.x,direction.y,input.y);
@@ -157,17 +164,20 @@ public class CharacterBasics : MonoBehaviour
 
         //This is our "friction"
         speed = Mathf.Lerp(speed, targetSpeed, accelerationSpeed);
-
+        force = Vector3.Lerp(force, Vector3.zero, .01f);
 
         //If we've got a signification magnitude, continue moving forward ;; if were are recieving movement, apply it 
         direction = (speed > .9f) ? new Vector3(moveDir.x * speed, _holdTheJump, moveDir.z * speed)
                                               : new Vector3(trans.forward.x * speed, _holdTheJump, trans.forward.z * speed);
+
         //apply gravity
         Gravity();
 
         float currentHeight = 0;
         if(_holdTheJump>0)
             currentHeight = trans.position.y;
+
+        direction += force;
 
         controller.Move(direction * Time.deltaTime);
 
@@ -180,6 +190,7 @@ public class CharacterBasics : MonoBehaviour
     #endregion
 
     #region Utilities
+
     protected void ForceStopEverything()
     {
         direction = Vector3.zero;
@@ -194,9 +205,9 @@ public class CharacterBasics : MonoBehaviour
         if (!falling&&!jumping)
         {
             direction.y = jumpHeight;
-            //anim.CrossFade(jump, .01f);
             jumping = true;
-            anim.Play(jump);
+            if (anim != null)
+                anim.Play(jump);
         }
 	}
 	
@@ -219,18 +230,18 @@ public class CharacterBasics : MonoBehaviour
 
     void Respawn()
     {
-        if (manager.gameObject.GetComponent<GameManager>().cheats)
-        {
-            this.ForceStopEverything();
-            this.transform.position = respawn;
-        }
-        else
-        {
-            manager.SendMessage("GameOver");
-            trans.position = initialPos;
-            trans.rotation = Quaternion.Euler(initialRot);
-            gameObject.SetActiveRecursively(false);
-        }
+        //if (manager.gameObject.GetComponent<GameManager>().cheats)
+        //{
+        //    this.ForceStopEverything();
+        //    this.transform.position = respawn;
+        //}
+        //else
+        //{
+        //    manager.SendMessage("GameOver");
+        //    trans.position = initialPos;
+        //    trans.rotation = Quaternion.Euler(initialRot);
+        //    gameObject.SetActiveRecursively(false);
+        //}
     }
 
     #endregion

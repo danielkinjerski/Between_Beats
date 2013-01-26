@@ -1,0 +1,70 @@
+Initialize engine version: 4.0.1f2
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.697]
+    Renderer: NVIDIA GeForce 9800 GTX+
+    Vendor:   NVIDIA
+    VRAM:     1257 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 DF24=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+- Completed reload, in  0.119 seconds
+desktop: 1920x1080 60Hz; virtual: 3600x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+HandleD3DDeviceLost
+  HandleD3DDeviceLost: needs reset, doing it
+FullResetD3DDevice
+ResetD3DDevice
+dev->Reset
+D3Dwindow device not lost anymore
+Platform assembly: C:\Users\Production\Documents\Dev\GameJam2013\GameJam2013\test_Data\Managed\System.dll (this message is harmless)
+ASVersion:
+AS3
+SETTING FOCUS
+
+SETTING FOCUS
+
+SETTING FOCUS
+
+SETTING FOCUS
+
+
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+ScreenWidth = 1280ScreenHeight = 720
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+ExternalInterface arrived
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+Resume clicked
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+ExternalInterface arrived
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+Go to main menu
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+ExternalInterface arrived
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+THE GAME WILL NOW EXIT
+ 
+(Filename: C:/BuildAgent/work/812c4f5049264fad/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+In OnExitGameCallback
+In Movie Destructor. ID = 291045008
