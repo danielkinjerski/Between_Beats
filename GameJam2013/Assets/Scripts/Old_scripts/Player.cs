@@ -18,8 +18,7 @@ public class Player : CharacterBasics {
 		}
         if (Input.GetButtonDown("Rush"))
         {
-            Debug.Log("RUSH");
-            base.Rush(trans.forward, 10);
+            base.Rush(trans.forward, 30);
         }
 	}
 
