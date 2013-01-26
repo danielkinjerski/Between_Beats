@@ -8,7 +8,7 @@ public class UI_Scene_HUD : Movie
 {
 	protected Value hudMovie = null;
 	
-	
+	public bool pauseMenuOpen = false;
 	
 	// Required to implement this constructor.
 	public UI_Scene_HUD(SFManager sfmgr, SFMovieCreationParams cp):
@@ -64,5 +64,50 @@ public class UI_Scene_HUD : Movie
 		Debug.Log("THE GAME WILL NOW EXIT");
 		OnExitGameCallback();
 	}
+	
+	public void OnMainMenuClick()
+	{
+		Debug.Log("Go to main menu");	
+	}
+	
+	public void OnResumeGameButtonClick()
+	{
+		Debug.Log("Resume clicked");
+		pauseMenuOpen = false;
+	}
+	
+	public void PauseGame()
+	{
+		Invoke("root.PauseGame", null, 0);
+		pauseMenuOpen = true;
+	}
+	
+	
+	public void OpenMainMenu()
+	{
+		Invoke("root.OpenPauseMenu", null, 0);	
+	}
+	
+	public void OpenEndGameMenu()
+	{
+		Invoke("root.OpenEndGameMenu", null, 0);
+	}
+	
+	
+	public void ClosePauseMenu()
+	{
+		Invoke("root.ClosePauseMenu", null, 0);
+	}
+	
+	public void CloseMainMenu()
+	{
+		Invoke("root.OpenPauseMenu", null, 0);
+	}
+	
+	public void CloseEndGameMenu()
+	{
+		Invoke("root.CloseEndGameMenu", null, 0);
+	}
+		
 	
 }

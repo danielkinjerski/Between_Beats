@@ -15,6 +15,8 @@
 		public var exitButton:Button;
 		public var startButton:Button;
 		
+		
+		
 		public function MainMenuUI() 
 		{
 			// constructor code
@@ -23,6 +25,8 @@
 			GUI_UTILS.MakeButton(exitButton, OnExitButtonClick);
 			GUI_UTILS.MakeButton(startButton, OnStartButtonClick);
 		}
+		
+		
 		
 		public function OnStartButtonClick(e:MouseEvent)
 		{
