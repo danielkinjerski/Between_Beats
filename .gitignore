@@ -1,7 +1,3 @@
-# Ignore the contributor's local assets folder, subfolders, and files
-GameJam2013/Assets/~Local/*
-GameJam2013/Assets/~Local/**/*
-
 # Ignore Library files
 GameJam2013/Library/*
 GameJam2013/Library/**/*
