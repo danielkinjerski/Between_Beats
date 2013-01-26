@@ -32,12 +32,11 @@ public class ScaleformGamePad : SFGamepad
 					Gamepads[a].Joysticks[b].VerticalAxisThresholdD = joystickVertThresholdDefault;
 				}
 				
-				Debug.Log( Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName).ToString() + "***");
-				if(/*Gamepads[a].Joysticks[b].DownKeyPressed*/Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) < 0)
+				
+				if(Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) < 0)
 				{
 					if(downKeyReleased)
 					{
-						Debug.Log("Down KEYS!");
 						downKeyReleased = false;
 						gManager.scaleFormCamera.hud.HandelScrollPress(GameManager.gameState.ToString(), 1);
 					}
@@ -47,12 +46,10 @@ public class ScaleformGamePad : SFGamepad
 					downKeyReleased = true;
 				}
 				
-				if(/*Gamepads[a].Joysticks[b].UpKeyPressed*/Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) > 0)
+				if(Input.GetAxis(Gamepads[a].Joysticks[b].VerticalAxisName) > 0)
 				{
-					Debug.Log("WTF");
 					if(upKeyReleased)
 					{
-						Debug.Log("UP KEY!");
 						upKeyReleased = false;
 						gManager.scaleFormCamera.hud.HandelScrollPress(GameManager.gameState.ToString(), -1);
 					}
