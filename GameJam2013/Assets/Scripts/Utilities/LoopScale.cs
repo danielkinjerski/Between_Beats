@@ -44,10 +44,13 @@ public class LoopScale : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         trans = this.transform;
-
-        x = ((1 / b) - c) * 0.0174532925f;
-
-        period = a * Mathf.Sin(b * x + c) + z;
+		
+		
+		float y = -z/a;
+		y = 1/Mathf.Sin(y);		
+        x = ((y * 100) / b) - c;
+	
+       // period = a * Mathf.Sin(b * x + c) + z;
 
 	}
 	
@@ -56,10 +59,10 @@ public class LoopScale : MonoBehaviour {
     // Update is called once per frame
     void LateUpdate()
     {
-        x = (x + 1);
         //y = z+ a * sin(bx + c)
         transform.localScale = Vector3.one * (z + a * Mathf.Sin(b * (x/100) + c));
-        
+		x = (x + 1);
+      
     }
 
 
