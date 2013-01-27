@@ -14,10 +14,13 @@ public class Player : CharacterBasics {
         base.BaseMovement(InputMovement(), InputMovement().magnitude );
 		if (Input.GetButtonDown("Jump"))
 		{
+			GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Jump");
 			base.Launch();
 		}
         if (Input.GetButtonDown("Rush"))
         {
+			
+			GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Rush");
             base.Rush(trans.forward, 30);
         }
 	}

@@ -58,6 +58,7 @@ public class LoopScale : MonoBehaviour {
         catchPulse = CatchPulse.WaitingForPulse;
         x = 0;
         b = 3;
+		GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
     }
 	
 	
