@@ -19,16 +19,17 @@ public class Goal : MonoBehaviour {
         //}
 
 
-        if (this.enabled && manager != null && !reached && GameManager.gameState == GameState.PlayGame)
+        if (manager != null && !reached && GameManager.gameState == GameState.PlayGame)
         {
-            manager.SendMessage("OnReachedLevelGoal");
+            manager.GetComponent<GameManager>().OnReachedLevelGoal();
             Debug.Log("hit goal" + other.gameObject.name);
             reached = true;
-            this.enabled = false;
+            //Destroy(this);
+            //this.enabled = false;
         }
 	}
 
-    public void OnEnable()
+    public void Reset()
     {
         reached = false;
     }

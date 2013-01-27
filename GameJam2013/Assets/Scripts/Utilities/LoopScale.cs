@@ -50,14 +50,20 @@ public class LoopScale : MonoBehaviour {
 
     public bool MainPulse = false;
 
+    public bool reachedCrest = false;
+
     #endregion
 
 	// Use this for initialization
 	void Start () {
         trans = this.transform;
         catchPulse = CatchPulse.WaitingForPulse;
+        reachedCrest = false;
         x = 0;
-        b = 3;
+        if (GameManager.gameState == GameState.Tutorial)
+        {
+            b = 3;
+        }
     }
 	
 	
@@ -69,21 +75,29 @@ public class LoopScale : MonoBehaviour {
             return;
 
         //y = z+ a * sin(bx + c)
-        transform.localScale = Vector3.one * (z + a * Mathf.Sin(b * (x/100) + c));
+        trans.localScale = Vector3.one * (z + a * Mathf.Sin(b * (x / 100) + c));
 		x = (x + 1);
 
 
-        if (MainPulse && catchPulse == CatchPulse.WaitingForPulse && transform.localScale.magnitude < 1)
+        if (GameManager.gameState == GameState.PlayGame && MainPulse && catchPulse == CatchPulse.WaitingForPulse && trans.localScale.magnitude < 1)
         {
             catchPulse = CatchPulse.LoadingCharacter;
+            Debug.Log("SENDING LOAD PLAYER");
             GameObject.FindGameObjectWithTag("GameManager").SendMessage("LoadPlayer");
             b = applySpeed;
             x = 420;
-            Debug.Log("load");
+            reachedCrest = false;
+            
         }
-        if (MainPulse && catchPulse == CatchPulse.Pulse && transform.localScale.magnitude > a + z - .01f)
+        if (catchPulse == CatchPulse.Pulse && !reachedCrest && trans.localScale.magnitude > a + z)
         {
-            //GameObject.FindGameObjectWithTag("GameManager").SendMessage("Death");
+            print(trans.localScale.magnitude);
+            reachedCrest = true;
+        }
+
+        if (GameManager.gameState == GameState.Tutorial)
+        {
+            b = Mathf.Lerp(b, 1, .001f);
         }
     }
 
@@ -94,16 +108,7 @@ public class LoopScale : MonoBehaviour {
 
     public void Initialize(float _spd)
     {
-        Debug.Log("bad");
         applySpeed = _spd;
         Start();
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            Debug.Log("game over");
-        }
     }
 }

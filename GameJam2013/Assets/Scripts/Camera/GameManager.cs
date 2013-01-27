@@ -10,7 +10,8 @@ public enum GameState
     PlayGame = 2,
     GameOver = 3,
     Transitioning = 4,
-    Pause = 5
+    Tutorial = 5,
+    Pause = 6
 }
 #endregion
 
@@ -130,10 +131,16 @@ public class GameManager : MonoBehaviour
         if (Player != null && MainPulse != null)
         {
             Vector3 playPos = Player.transform.position;
+            Vector3 ringScale = MainPulse.transform.GetChild(0).transform.localScale;
             playPos.y = 0;
-            if (playPos.magnitude >= MainPulse.transform.GetChild(0).transform.localScale.magnitude && playPos.magnitude != 0 && MainPulse.transform.GetChild(0).transform.localScale.magnitude !=1)
+            ringScale.y = 0;
+            if (playPos.magnitude/2 >= ringScale.magnitude && playPos.magnitude != 0 && ringScale.magnitude > 1)
             {
-                //print("Death");
+                if (MainPulse.GetComponentInChildren<LoopScale>().reachedCrest)
+                {
+                    print(playPos.magnitude + " -- " + ringScale.magnitude);
+                    Death();
+                }
             }
         }
     }
@@ -160,7 +167,7 @@ public class GameManager : MonoBehaviour
 		menuOpen = false;
 
         //...LOADING...
-        LoadNextLevel();
+        OpeningScene();//NewLevelText();
     }
     void TogglePause()
     {
@@ -193,23 +200,34 @@ public class GameManager : MonoBehaviour
 
     public void NewLevelText()
     {
-        scaleFormCamera.hud.OpenHUD();
+        //scaleFormCamera.hud.TransitionLevel(levelsCompleted+1);
     }
 
     #endregion
 
     #region Methods
 
+    void OpeningScene()
+    {
+        gameState = GameState.Tutorial;
+        SetUpMainPulse();
+        LoadBasicLevelElements();
+
+        MainPulse.GetComponentInChildren<LoopScale>().b = 15;
+        MainPulse.GetComponentInChildren<LoopScale>().a = 10;
+        MainPulse.GetComponentInChildren<LoopScale>().z = 0;
+        
+    }
+
     void LoadNextLevel()
     {
-        Debug.Log("loadnextlevel()");
         LoadObstacles();
         SetGoalLocation();
         SetUpMainPulse();
         NewLevelText();
+        LoadBasicLevelElements();
 
-        if (GameLight == null)
-            GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position,  PrefabGameLight.transform.rotation) as GameObject;
+        gameState = GameState.PlayGame;
     }
 
     void SetGoalLocation()
@@ -218,7 +236,6 @@ public class GameManager : MonoBehaviour
         switch (levelsCompleted)
         {
             case 0:
-                break;
             case 1:
             case 2:
             case 3:
@@ -241,20 +258,15 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-
-        Debug.Log("placing goal");
         Vector3 dir = new Vector3(Random.insideUnitCircle.x * goalDistance, 0, Random.insideUnitCircle.y * goalDistance);
         dir.Normalize();
         Vector3 pos = dir * goalDistance;
+
+        Goal.transform.position = pos;
     }
 
     void LoadObstacles()
     {
-        if (Ground == null)
-        {
-            Ground = GameObject.Instantiate(PrefabGround, Vector3.zero, Quaternion.identity) as GameObject;
-        }
-
         int numOfObstacles = 0;
         switch (levelsCompleted)
         {
@@ -315,8 +327,6 @@ public class GameManager : MonoBehaviour
 
     #region Utilities
 
-    
-
     private void PlaceBlock(int i)
     {
         Vector3 dir = new Vector3(Random.insideUnitCircle.x * obstacleDistance, 0, Random.insideUnitCircle.y * obstacleDistance);
@@ -334,6 +344,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void LoadBasicLevelElements()
+    {
+        if (GameLight == null)
+            GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position, PrefabGameLight.transform.rotation) as GameObject;
+
+        if (Ground == null)
+        {
+            Ground = GameObject.Instantiate(PrefabGround, Vector3.zero, Quaternion.identity) as GameObject;
+        }
+    }
     
 
 
@@ -341,10 +361,11 @@ public class GameManager : MonoBehaviour
 
     #region Game Messages
 
-    void OnReachedLevelGoal()
+    public void OnReachedLevelGoal()
     {
-        if (gameState != GameState.PlayGame)
+        if (gameState == GameState.Transitioning)
             return;
+        print(gameState);
         gameState = GameState.Transitioning;
         levelsCompleted++;
         PlayerCam.SendMessage("StopCam");
@@ -377,11 +398,7 @@ public class GameManager : MonoBehaviour
         }
 
         MainPulse.GetComponentInChildren<LoopScale>().UnlockPulse();
-        Goal.GetComponentInChildren<Goal>().enabled = true;
-        print(Goal.transform.position);
-        print(Player.transform.position);
-
-        gameState = GameState.PlayGame;
+        Goal.GetComponentInChildren<Goal>().Reset();
     }
 
     public void Death()
