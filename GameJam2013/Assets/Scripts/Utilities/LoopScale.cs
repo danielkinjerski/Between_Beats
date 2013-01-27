@@ -104,11 +104,15 @@ public class LoopScale : MonoBehaviour {
 
     public void UnlockPulse()
     {
+        a = 100;
+        z = 100;
         catchPulse = CatchPulse.Pulse;
     }
 
     public void Initialize(float _spd)
     {
+        a = 100;
+        z = 100;
         applySpeed = _spd;
         Start();
     }
