@@ -188,6 +188,7 @@ public class CharacterBasics : MonoBehaviour
         {
             force = Vector3.zero;
             rushing = false;
+            anim.CrossFade(idle);
         }
 
         //If we've got a signification magnitude, continue moving forward ;; if were are recieving movement, apply it 

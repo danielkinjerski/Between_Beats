@@ -1,6 +1,14 @@
 using UnityEngine;
 using System.Collections;
 
+public enum CatchPulse
+{
+    WaitingForPulse,
+    LoadingCharacter,
+    Pulse
+
+}
+
 public class LoopScale : MonoBehaviour {
 
 
@@ -35,39 +43,59 @@ public class LoopScale : MonoBehaviour {
     /// <summary>
     /// this is how far the curve has been traversed
     /// </summary>
-    private float x = 0;
+    public float x = 0;
 
-    float period = 0;
+    public float applySpeed = 1;
+    public CatchPulse catchPulse = CatchPulse.Pulse;
+
+    public bool MainPulse = false;
 
     #endregion
 
 	// Use this for initialization
 	void Start () {
         trans = this.transform;
-		
-		
-		float y = -z/a;
-		y = 1/Mathf.Sin(y);		
-        x = ((y * 100) / b) - c;
-	
-       // period = a * Mathf.Sin(b * x + c) + z;
-
-	}
+        catchPulse = CatchPulse.WaitingForPulse;
+        x = 0;
+        b = 3;
+    }
 	
 	
 
     // Update is called once per frame
     void LateUpdate()
     {
+        if (catchPulse == CatchPulse.LoadingCharacter)
+            return;
+
         //y = z+ a * sin(bx + c)
         transform.localScale = Vector3.one * (z + a * Mathf.Sin(b * (x/100) + c));
 		x = (x + 1);
-      
+
+
+        if (MainPulse && catchPulse == CatchPulse.WaitingForPulse && transform.localScale.magnitude < 1)
+        {
+            catchPulse = CatchPulse.LoadingCharacter;
+            GameObject.FindGameObjectWithTag("GameManager").SendMessage("LoadPlayer");
+            b = applySpeed;
+            x = 420;
+            Debug.Log("load");
+        }
+        if (MainPulse && catchPulse == CatchPulse.Pulse && transform.localScale.magnitude > a + z - .01f)
+        {
+            GameObject.FindGameObjectWithTag("GameManager").SendMessage("Death");
+        }
     }
 
-
-    public void SetTarget()
+    public void UnlockPulse()
     {
+        catchPulse = CatchPulse.Pulse;
+    }
 
+    public void Initialize(float _spd)
+    {
+        Debug.Log("bad");
+        applySpeed = _spd;
+        Start();
     }
 }

@@ -8,15 +8,23 @@ public class Goal : MonoBehaviour {
 
 	// Use this for initialization
 	void OnTriggerEnter () {
+
+        if (GameManager.gameState == GameState.PlayGame)
+        {
+            reached = false;
+
+        }
+
+
         if (manager != null && !reached && GameManager.gameState == GameState.PlayGame)
         {
             manager.SendMessage("OnReachedLevelGoal");
-            this.enabled = false;
             reached = true;
+            this.enabled = false;
         }
 	}
 
-    public void Initialize()
+    public void OnEnable()
     {
         reached = false;
         Debug.Log("INIT");

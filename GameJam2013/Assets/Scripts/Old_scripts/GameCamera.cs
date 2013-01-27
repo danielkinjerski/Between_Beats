@@ -32,17 +32,27 @@ public class GameCamera : MonoBehaviour
 	public float offset;
 	
 	public bool versusMode = false;
+    public bool FREEZE = false;
 
 
 	// Use this for initialization
 	void Initialize ()
 	{
+        FREEZE = false;
         playerTarget = GameObject.FindWithTag("Player");
         // Find all game objects with tag "Waypoint"
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         FindClosestWaypoint();
 	}
-	
+
+    public void StopCam()
+    {
+        FREEZE = true;
+    }
+    public void GoCam()
+    {
+        FREEZE = false;
+    }
 	void Update ()
 	{
 		if (Input.GetKey (KeyCode.Minus)) {
@@ -63,7 +73,7 @@ public class GameCamera : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate ()
 	{
-        if (!target)
+        if (!target || FREEZE)
         {
             return;
             //FindClosestWaypoint();

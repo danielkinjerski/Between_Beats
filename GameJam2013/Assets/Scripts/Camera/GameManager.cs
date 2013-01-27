@@ -59,6 +59,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static int levelsCompleted = 0;
 
+    float obstacleDistance = 30.0f;
+    float goalDistance = 30.0f;
+    float pulseSpeed = 1f;
+
     #endregion
 
     #region Constructors
@@ -76,6 +80,7 @@ public class GameManager : MonoBehaviour
         Object.Destroy(PlayerCam);
         Object.Destroy(Ground);
         Object.Destroy(GameLight);
+        scaleFormCamera.hud.OnExitGameCallback();
 
         levelsCompleted = 0;
         gameState = GameState.OpeningWindow;
@@ -91,9 +96,10 @@ public class GameManager : MonoBehaviour
     void Awake () 
 	{
         gameState = GameState.OpeningWindow;
+        Random.seed = (int)Time.time;
         levelsCompleted = 0;
 		menuOpen = true;
-        PlayerCam = GameObject.Instantiate(PrefabPlayerCam, Vector3.zero, Quaternion.identity) as GameObject;
+        PlayerCam = GameObject.Instantiate(PrefabPlayerCam, PrefabPlayerCam.transform.position, PrefabPlayerCam.transform.rotation) as GameObject;
         scaleFormCamera = PlayerCam.GetComponent<ScaleformCamera>();
 	}
 
@@ -150,7 +156,7 @@ public class GameManager : MonoBehaviour
     {
 		if(gameState == GameState.Pause)
 		{
-			gameState = GameState.PlayGame;
+            gameState = GameState.Transitioning;
 			scaleFormCamera.hud.ClosePauseMenu();
 			menuOpen = false;
 		}
@@ -182,36 +188,178 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region Utilities
+    #region Methods
 
-    void ManageObstacles()
+    void LoadNextLevel()
+    {
+        LoadObstacles();
+        SetGoalLocation();
+        SetUpMainPulse();
+        NewLevelText();
+
+        if (GameLight == null)
+            GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position,  PrefabGameLight.transform.rotation) as GameObject;
+
+        gameState = GameState.PlayGame;
+    }
+
+    void SetGoalLocation()
+    {
+        Vector3 pos = Vector3.zero;
+        
+        Debug.Log("NEW GOAL.");
+        switch (levelsCompleted)
+        {
+            case 0:
+                break;
+            case 1:
+            case 2:
+            case 3:
+                goalDistance = 30;
+                break;
+            case 4:
+            case 5:
+            case 6:
+                goalDistance = 50;
+                break;
+            default:
+                goalDistance = 60;
+                break;
+        }
+
+        if (Goal == null)
+        {
+            Goal = GameObject.Instantiate(PrefabGoal, PrefabGoal.transform.position, Quaternion.identity) as GameObject;
+            Goal.GetComponentInChildren<Goal>().manager = this.gameObject;
+            return;
+        }
+
+
+        Debug.Log("placing goal");
+        for (int i = 0; i < obstacles.Count; i++)
+        {
+            PlaceGoal();
+        }
+    }
+
+    void LoadObstacles()
     {
         if (Ground == null)
         {
             Ground = GameObject.Instantiate(PrefabGround, Vector3.zero, Quaternion.identity) as GameObject;
         }
 
+        int numOfObstacles = 0;
         switch (levelsCompleted)
         {
             case 0:
-                Debug.Log("Load first level.");
+                Debug.Log("Lucky you - no obstacles.");
                 break;
             case 1:
-                Debug.Log("Get harder.");
-                break;
             case 2:
-                Debug.Log("Get difficult.");
-                break;
             case 3:
-                Debug.Log("UNBEATABLE.");
+                numOfObstacles = 5;
+                obstacleDistance = 20;
+                break;
+            case 4:
+            case 5:
+            case 6:
+                numOfObstacles = 10;
+                obstacleDistance = 30;
                 break;
             default:
-                Debug.Log("Reload first level.");
+                numOfObstacles = 15;
+                obstacleDistance = 40;
+                pulseSpeed += .02f;
                 break;
+        }
+
+        if (obstacles.Count < numOfObstacles)
+        {
+            while (obstacles.Count < numOfObstacles)
+            {
+                obstacles.Add(GameObject.Instantiate(PrefabLevelBlock) as GameObject);
+            }
+
+        }
+        else if (obstacles.Count > numOfObstacles)
+        {
+            int range = obstacles.Count - numOfObstacles;
+            obstacles.RemoveRange(obstacles.Count - 1 - range, range);
+        }
+
+
+        for (int i = 0; i < obstacles.Count; i++)
+        {
+            PlaceBlock(i);
+        }
+
+    }
+
+    void SetUpMainPulse()
+    {
+        if (MainPulse == null)
+        {
+            MainPulse = GameObject.Instantiate(PrefabMainPulse, PrefabMainPulse.transform.position, PrefabMainPulse.transform.rotation) as GameObject;
+            return;
         }
     }
 
-    void LoadNextLevel()
+    #endregion
+
+    #region Utilities
+
+    void PlaceGoal()
+    {
+        Vector3 dir = new Vector3(Random.insideUnitCircle.x * goalDistance, 0, Random.insideUnitCircle.y * goalDistance);        
+        dir.Normalize();
+        Vector3 pos = dir * goalDistance;
+
+        Goal.transform.position = pos;
+    }
+
+    
+
+    private void PlaceBlock(int i)
+    {
+        Vector3 dir = new Vector3(Random.insideUnitCircle.x * obstacleDistance, 0, Random.insideUnitCircle.y * obstacleDistance);
+        dir.Normalize();
+        Vector3 pos = dir * obstacleDistance;
+
+        obstacles[i].transform.position = pos;
+
+        for (int j = 0; j < obstacles.Count; j++)
+        {
+            if(obstacles[i].collider.bounds.Intersects(obstacles[j].collider.bounds) && i != j) 
+            {
+                PlaceBlock(i);
+            }
+        }
+    }
+
+    
+
+
+    #endregion
+
+    #region Game Messages
+
+    void OnReachedLevelGoal()
+    {
+        if (gameState == GameState.Transitioning)
+            return;
+        gameState = GameState.Transitioning;
+        levelsCompleted++;
+        PlayerCam.SendMessage("StopCam");
+        PlayerCam.transform.position = PrefabPlayerCam.transform.position;
+        LoadNextLevel();
+        Debug.Log("RUINING LIVES");
+        MainPulse.GetComponentInChildren<LoopScale>().Initialize(pulseSpeed);
+        Player.SetActive(false);
+
+    }
+
+    public void LoadPlayer()
     {
         // If this is the first game - initialize our player
         if (Player == null)
@@ -223,94 +371,22 @@ public class GameManager : MonoBehaviour
         // else respawn our guy
         else
         {
+            if (!Player.activeInHierarchy)
+            {
+                Player.SetActive(true);
+            }
             Player.transform.position = PrefabPlayer.transform.position;
+            PlayerCam.SendMessage("GoCam");
         }
 
-        ChooseGoalLocation();
-        LoadObstacles();
-        SetUpMainPulse();
-        ManageObstacles();
-        NewLevelText();
-
-        if (GameLight == null)
-            GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position,  PrefabGameLight.transform.rotation) as GameObject;
-
-        gameState = GameState.PlayGame;
+        MainPulse.GetComponentInChildren<LoopScale>().UnlockPulse();
+        Goal.GetComponentInChildren<Goal>().enabled = true;
     }
 
-    void ChooseGoalLocation()
+    public void Death()
     {
-        Vector3 pos = Vector3.zero;
-        
-        Debug.Log("NEW GOAL.");
-        switch (levelsCompleted)
-        {
-            case 0:
-                //Debug.Log("Load first level.");
-                pos = PrefabGoal.transform.position;
-                break;
-            case 1:
-                //Debug.Log("Get harder.");
-                break;
-            case 2:
-                //Debug.Log("Get difficult.");
-                break;
-            case 3:
-                break;
-            default:
-                //Debug.Log("UNBEATABLE.");
-                break;
-        }
-
-        if (Goal == null)
-        {
-            Goal = GameObject.Instantiate(PrefabGoal, pos, Quaternion.identity) as GameObject;
-            Goal.GetComponentInChildren<Goal>().manager = this.gameObject;
-        }
-
-        Goal.GetComponentInChildren<Goal>().Initialize();
-    }
-
-    void LoadObstacles()
-    {
-        switch (levelsCompleted)
-        {
-            case 0:
-                Debug.Log("Lucky you - no obstacles.");
-                break;
-            case 1:
-                //Debug.Log("Get harder.");
-                break;
-            case 2:
-                //Debug.Log("Get difficult.");
-                break;            
-            default:
-                //Debug.Log("UNBEATABLE.");
-                break;
-        }
-    }
-
-    void SetUpMainPulse()
-    {
-        if (MainPulse == null)
-            MainPulse = GameObject.Instantiate(PrefabMainPulse, PrefabMainPulse.transform.position, PrefabMainPulse.transform.rotation) as GameObject;
-
-        //MainPulse.SendMessage("Reload");
-
-    }
-
-    #endregion
-
-    #region Game Messages
-
-    void OnReachedLevelGoal()
-    {
-        if (gameState == GameState.Transitioning)
-            return;
-        gameState = GameState.Transitioning;
-        //Debug.Log("Doing good.");
-        levelsCompleted++;
-        LoadNextLevel();
+        //Debug.Log("DEATH");
+        //Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH");
     }
 
     #endregion
