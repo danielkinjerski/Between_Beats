@@ -105,6 +105,7 @@
 			if (sourceText == null)
 			{
 				tutorialComeplete = true;
+				TutorialComplete();
 			}
 		}
 		
