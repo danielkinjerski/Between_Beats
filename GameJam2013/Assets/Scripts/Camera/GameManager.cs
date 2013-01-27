@@ -255,6 +255,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
+        Debug.Log("Next Level");
         LoadObstacles();
         SetGoalLocation();
         SetUpMainPulse();
