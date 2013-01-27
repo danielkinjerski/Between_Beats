@@ -56,9 +56,13 @@ public class UI_Scene_HUD : Movie
 	
 	public void OnStartButtonClick()
 	{
-		GManager.Play();
-		
+		GManager.Play();		
 	}
+
+    public void OnReplay()
+    {
+        Application.LoadLevel(Application.loadedLevelName);
+    }
 
 	// Callback from the content to launch the game when the "close" animation has finished playing.
 	public void OnExitGameCallback()
