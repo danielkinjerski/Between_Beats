@@ -13,7 +13,7 @@ public class CharacterBasics : MonoBehaviour
     private float speed, targetSpeed;
     public Vector3 direction, force, velocity, respawn, initialPos, initialRot;
     public float jumpHeight, maxSpeed = 8, accelerationSpeed = 1f, gravity = 20, lungeThreshold = 5f;
-	public string walk = "Walking", idle = "Standing", fall = "Default Take", jump = "Jump", rush = "Glide";
+	public string walk = "Walking", idle = "Standing", fall = "Default Take", jump = "Jump", rush = "Glide", run = "Run";
     public bool attacking = false, falling = false, jumping = false, rushing = false;
 
     public Transform trans;
@@ -114,7 +114,10 @@ public class CharacterBasics : MonoBehaviour
             {
                 //if we are coming from idle or run ;; force chance
                 if (!anim.IsPlaying(walk))
+				{
                     anim.Play(walk);
+					GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Run");
+				}
                 //if we are already playing out anim ;; wait till its over, then play again
                 else if (!anim.isPlaying)
                     anim.Play(walk);
@@ -123,7 +126,7 @@ public class CharacterBasics : MonoBehaviour
 
             #region Idle
             else if (speed == 0 && !falling && !jumping && !rushing)
-            {
+            {			
                 //if we are playing any other animation of than idle ;; force chance
                 if (!anim.IsPlaying(idle))
                     anim.CrossFade(idle);

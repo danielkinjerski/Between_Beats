@@ -37,6 +37,7 @@ public class Player : CharacterBasics {
     /// </returns>
     private Vector2 InputMovement()
     {
+		
         return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
 
