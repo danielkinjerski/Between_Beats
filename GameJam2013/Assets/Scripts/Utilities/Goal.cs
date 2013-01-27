@@ -11,6 +11,7 @@ public class Goal : MonoBehaviour {
         if (manager != null && !reached && GameManager.gameState == GameState.PlayGame)
         {
             manager.SendMessage("OnReachedLevelGoal");
+            this.enabled = false;
             reached = true;
         }
 	}
