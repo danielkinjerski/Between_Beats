@@ -83,7 +83,7 @@ public class LoopScale : MonoBehaviour {
         }
         if (MainPulse && catchPulse == CatchPulse.Pulse && transform.localScale.magnitude > a + z - .01f)
         {
-            GameObject.FindGameObjectWithTag("GameManager").SendMessage("Death");
+            //GameObject.FindGameObjectWithTag("GameManager").SendMessage("Death");
         }
     }
 
@@ -97,5 +97,13 @@ public class LoopScale : MonoBehaviour {
         Debug.Log("bad");
         applySpeed = _spd;
         Start();
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Debug.Log("game over");
+        }
     }
 }

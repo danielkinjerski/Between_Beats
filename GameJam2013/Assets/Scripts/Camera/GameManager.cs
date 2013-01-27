@@ -126,6 +126,16 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+
+        if (Player != null && MainPulse != null)
+        {
+            Vector3 playPos = Player.transform.position;
+            playPos.y = 0;
+            if (playPos.magnitude >= MainPulse.transform.GetChild(0).transform.localScale.magnitude && playPos.magnitude != 0 && MainPulse.transform.GetChild(0).transform.localScale.magnitude !=1)
+            {
+                //print("Death");
+            }
+        }
     }
 
     #endregion
@@ -145,7 +155,7 @@ public class GameManager : MonoBehaviour
     }
     public void Play()
     {
-        gameState = GameState.PlayGame;
+        gameState = GameState.Transitioning;
 		//scaleFormCamera.hud.OpenHUD();
 		menuOpen = false;
 
@@ -156,7 +166,7 @@ public class GameManager : MonoBehaviour
     {
 		if(gameState == GameState.Pause)
 		{
-            gameState = GameState.Transitioning;
+            gameState = GameState.PlayGame;
 			scaleFormCamera.hud.ClosePauseMenu();
 			menuOpen = false;
 		}
@@ -192,6 +202,7 @@ public class GameManager : MonoBehaviour
 
     void LoadNextLevel()
     {
+        Debug.Log("loadnextlevel()");
         LoadObstacles();
         SetGoalLocation();
         SetUpMainPulse();
@@ -199,14 +210,10 @@ public class GameManager : MonoBehaviour
 
         if (GameLight == null)
             GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position,  PrefabGameLight.transform.rotation) as GameObject;
-
-        gameState = GameState.PlayGame;
     }
 
     void SetGoalLocation()
-    {
-        Vector3 pos = Vector3.zero;
-        
+    {        
         Debug.Log("NEW GOAL.");
         switch (levelsCompleted)
         {
@@ -236,10 +243,9 @@ public class GameManager : MonoBehaviour
 
 
         Debug.Log("placing goal");
-        for (int i = 0; i < obstacles.Count; i++)
-        {
-            PlaceGoal();
-        }
+        Vector3 dir = new Vector3(Random.insideUnitCircle.x * goalDistance, 0, Random.insideUnitCircle.y * goalDistance);
+        dir.Normalize();
+        Vector3 pos = dir * goalDistance;
     }
 
     void LoadObstacles()
@@ -309,15 +315,6 @@ public class GameManager : MonoBehaviour
 
     #region Utilities
 
-    void PlaceGoal()
-    {
-        Vector3 dir = new Vector3(Random.insideUnitCircle.x * goalDistance, 0, Random.insideUnitCircle.y * goalDistance);        
-        dir.Normalize();
-        Vector3 pos = dir * goalDistance;
-
-        Goal.transform.position = pos;
-    }
-
     
 
     private void PlaceBlock(int i)
@@ -346,7 +343,7 @@ public class GameManager : MonoBehaviour
 
     void OnReachedLevelGoal()
     {
-        if (gameState == GameState.Transitioning)
+        if (gameState != GameState.PlayGame)
             return;
         gameState = GameState.Transitioning;
         levelsCompleted++;
@@ -381,12 +378,16 @@ public class GameManager : MonoBehaviour
 
         MainPulse.GetComponentInChildren<LoopScale>().UnlockPulse();
         Goal.GetComponentInChildren<Goal>().enabled = true;
+        print(Goal.transform.position);
+        print(Player.transform.position);
+
+        gameState = GameState.PlayGame;
     }
 
     public void Death()
     {
         //Debug.Log("DEATH");
-        //Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH"); Debug.Log("DEATH");
+        GameOver();
     }
 
     #endregion
