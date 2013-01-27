@@ -64,6 +64,7 @@ public class LoopScale : MonoBehaviour {
         {
             b = 3;
         }
+		GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
     }
 	
 	

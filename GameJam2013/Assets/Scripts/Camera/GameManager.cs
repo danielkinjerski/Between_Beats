@@ -59,6 +59,14 @@ public class GameManager : MonoBehaviour
     /// levels completed
     /// </summary>
     public static int levelsCompleted = 0;
+	
+			
+	/// we store all our sounds in an array, then we can play them
+	/// at any time, any where, by sending a message to gameManager
+	/// to playOneShot and pass along the name of the audio we want
+	public AudioClip[] audioClips;
+	Dictionary<string,int> audioLookUp;
+	public Dictionary<string,int> audioVolume;
 
     float obstacleDistance = 30.0f;
     float goalDistance = 30.0f;
@@ -102,6 +110,15 @@ public class GameManager : MonoBehaviour
 		menuOpen = true;
         PlayerCam = GameObject.Instantiate(PrefabPlayerCam, PrefabPlayerCam.transform.position, PrefabPlayerCam.transform.rotation) as GameObject;
         scaleFormCamera = PlayerCam.GetComponent<ScaleformCamera>();
+				
+		//build our sound look up table
+		int counter = 0;
+		audioLookUp = new Dictionary<string, int>();
+		foreach(AudioClip clip in audioClips)
+		{
+			print (string.Format(">>>> Added {0} at index {1}", clip.ToString(), counter));
+			audioLookUp.Add(clip.name, counter++);
+		}	
 	}
 
     public void Update()
@@ -207,6 +224,21 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Methods
+	void playOneShot(string audioToPlay)
+	{
+		print(string.Format("attempt to play the {0} audio clip", audioToPlay));
+		if(PlayerCam != null)
+		{
+			if (audioLookUp.ContainsKey(audioToPlay))
+			{
+			    PlayerCam.audio.PlayOneShot(audioClips[audioLookUp[audioToPlay]]);
+			}
+			else
+			{
+				Debug.LogWarning(string.Format("No key found in audioLookUp matching {0}", audioToPlay));
+			}
+		}
+	}
 
     void OpeningScene()
     {
