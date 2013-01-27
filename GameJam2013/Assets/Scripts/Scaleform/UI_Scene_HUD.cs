@@ -122,7 +122,13 @@ public class UI_Scene_HUD : Movie
 	{
 		Invoke("root.OpenPauseMenu", null, 0);
 	}
+
+    public void CloseTutorialMenu()
+    {
+        Invoke("root.CloseTutorialMenu", null, 0);
+    }
 	
+
 	public void CloseEndGameMenu()
 	{
 		Invoke("root.CloseEndGameMenu", null, 0);
@@ -152,8 +158,11 @@ public class UI_Scene_HUD : Movie
 	
 	public void TutorialComplete()
 	{
-		//this is where we remove the tutorial menu and continue on
-        gManager.LoadNextLevel();
+        if (GameManager.gameState == GameState.Tutorial)
+        {
+            //this is where we remove the tutorial menu and continue on
+            gManager.LoadNextLevel();
+        }
 		
 	}
 	

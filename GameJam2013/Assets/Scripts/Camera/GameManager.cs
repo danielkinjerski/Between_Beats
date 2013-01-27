@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
     float obstacleDistance = 30.0f;
     float goalDistance = 30.0f;
     float pulseSpeed = 1f;
+    int maxNumberOfLevels = 10;
 
     #endregion
 
@@ -143,6 +144,15 @@ public class GameManager : MonoBehaviour
                     scaleFormCamera.hud.HandelConfirmPress(gameState.ToString());
                     break;
             }
+        }
+
+        if (gameState == GameState.Tutorial)
+        {
+            if (Input.anyKey)
+            {
+                SkipTutorial();
+            }
+
         }
 
         if (Player != null && MainPulse != null)
@@ -224,6 +234,13 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Methods
+
+    void SkipTutorial()
+    {
+        scaleFormCamera.hud.CloseTutorialMenu();
+        LoadNextLevel();
+    }
+
 	void playOneShot(string audioToPlay)
 	{
 		print(string.Format("attempt to play the {0} audio clip", audioToPlay));
@@ -403,6 +420,11 @@ public class GameManager : MonoBehaviour
         print(gameState);
         gameState = GameState.Transitioning;
         levelsCompleted++;
+
+        if (levelsCompleted > maxNumberOfLevels)
+        {
+            return;
+        }
         PlayerCam.SendMessage("StopCam");
         PlayerCam.transform.position = PrefabPlayerCam.transform.position;
         LoadNextLevel();
