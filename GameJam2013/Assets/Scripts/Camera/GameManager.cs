@@ -84,14 +84,6 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
-        Object.Destroy(Player);
-        Object.Destroy(Goal);
-        Object.Destroy(MainPulse);
-        Object.Destroy(PlayerCam);
-        Object.Destroy(Ground);
-        Object.Destroy(GameLight);
-        scaleFormCamera.hud.OnExitGameCallback();
-
         levelsCompleted = 0;
         gameState = GameState.OpeningWindow;
     }
@@ -183,10 +175,7 @@ public class GameManager : MonoBehaviour
 		gameState = GameState.OpeningWindow;
 		menuOpen = true;
     }
-    public void Quit()
-    {
-        Application.Quit();
-    }
+
     public void Play()
     {
         gameState = GameState.Transitioning;

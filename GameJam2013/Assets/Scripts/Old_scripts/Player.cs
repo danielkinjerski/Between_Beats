@@ -19,8 +19,7 @@ public class Player : CharacterBasics {
 		}
         if (Input.GetButtonDown("Rush"))
         {
-			
-			GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Rush");
+            //GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Rush");
             base.Rush(trans.forward, 30);
         }
 	}

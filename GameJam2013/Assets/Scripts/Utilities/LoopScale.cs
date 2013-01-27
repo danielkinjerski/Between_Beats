@@ -97,7 +97,7 @@ public class LoopScale : MonoBehaviour {
             reachedCrest = true;
         }
 
-        if (GameManager.gameState == GameState.Tutorial && audio.enabled)
+        if (GameManager.gameState == GameState.Tutorial && audio != null && audio.enabled)
         {
             b = Mathf.Lerp(b, 1, .001f);
             audio.pitch = Mathf.Lerp(audio.pitch, 1, .001f);
@@ -117,7 +117,8 @@ public class LoopScale : MonoBehaviour {
 
     public void Initialize(float _spd)
     {
-        audio.enabled = false;
+        if(audio!=null)
+            audio.enabled = false;
         applySpeed = _spd;
         GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
         Start();
