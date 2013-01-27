@@ -421,8 +421,10 @@ public class GameManager : MonoBehaviour
         gameState = GameState.Transitioning;
         levelsCompleted++;
 
-        if (levelsCompleted > maxNumberOfLevels)
+        if (levelsCompleted >= maxNumberOfLevels)
         {
+            gameState = GameState.GameOver;
+            scaleFormCamera.hud.OpenEndGameMenu();
             return;
         }
         PlayerCam.SendMessage("StopCam");

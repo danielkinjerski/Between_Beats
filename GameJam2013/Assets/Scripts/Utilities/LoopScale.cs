@@ -80,13 +80,17 @@ public class LoopScale : MonoBehaviour {
 		x = (x + 1);
 
 
-        if (GameManager.gameState == GameState.PlayGame && MainPulse && catchPulse == CatchPulse.WaitingForPulse && trans.localScale.magnitude < 1)
+        if ( trans.localScale.magnitude < 1)
         {
-            catchPulse = CatchPulse.LoadingCharacter;
-            Debug.Log("SENDING LOAD PLAYER");
-            GameObject.FindGameObjectWithTag("GameManager").SendMessage("LoadPlayer");
-            b = applySpeed;
-            x = 420;
+            if (GameManager.gameState == GameState.PlayGame && MainPulse && catchPulse == CatchPulse.WaitingForPulse)
+            {
+
+                catchPulse = CatchPulse.LoadingCharacter;
+                Debug.Log("SENDING LOAD PLAYER");
+                GameObject.FindGameObjectWithTag("GameManager").SendMessage("LoadPlayer");
+                b = applySpeed;
+                x = 420;
+            }
             reachedCrest = false;
             
         }
@@ -94,6 +98,7 @@ public class LoopScale : MonoBehaviour {
         {
             print(trans.localScale.magnitude);
             reachedCrest = true;
+            GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
         }
 
         if (GameManager.gameState == GameState.Tutorial)
