@@ -69,7 +69,15 @@ public class GameManager : MonoBehaviour
 
     ~GameManager()
     {
+        Object.Destroy(Player);
+        Object.Destroy(Goal);
+        Object.Destroy(MainPulse);
+        Object.Destroy(PlayerCam);
+        Object.Destroy(Ground);
+        Object.Destroy(GameLight);
 
+        levelsCompleted = 0;
+        gameState = GameState.OpeningWindow;
     }
 
     #endregion
@@ -100,7 +108,6 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetButtonDown("Confirm"))
         {
-            Debug.Log(gameState.ToString());
             switch (gameState)
             {
                 case GameState.GameOver:
@@ -132,7 +139,7 @@ public class GameManager : MonoBehaviour
     public void Play()
     {
         gameState = GameState.PlayGame;
-		scaleFormCamera.hud.OpenHUD();
+		//scaleFormCamera.hud.OpenHUD();
 		menuOpen = false;
 
         //...LOADING...
@@ -207,10 +214,19 @@ public class GameManager : MonoBehaviour
 
         // If this is the first game - initialize our player
         if (Player == null)
-            Player = GameObject.Instantiate(PrefabPlayer, Vector3.zero+Vector3.up*2, Quaternion.identity) as GameObject;
+        {
+            Player = GameObject.Instantiate(PrefabPlayer, Vector3.zero + Vector3.up * 2, Quaternion.identity) as GameObject;
+            // grab reference
+            PlayerCam.SendMessage("Initialize");
+        }
+        // else respawn our guy
+        else
+        {
+            Player.transform.position = PrefabPlayer.transform.position;
+        }
+
         if (GameLight == null)
             GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position,  PrefabGameLight.transform.rotation) as GameObject;
-        PlayerCam.SendMessage("Initialize");
     }
 
     void ChooseGoalLocation()
@@ -266,7 +282,7 @@ public class GameManager : MonoBehaviour
     void SetUpMainPulse()
     {
         if (MainPulse == null)
-            MainPulse = GameObject.Instantiate(PrefabMainPulse, Vector3.zero, Quaternion.identity) as GameObject;
+            MainPulse = GameObject.Instantiate(PrefabMainPulse, PrefabMainPulse.transform.position, PrefabMainPulse.transform.rotation) as GameObject;
 
         //MainPulse.SendMessage("Reload");
 
