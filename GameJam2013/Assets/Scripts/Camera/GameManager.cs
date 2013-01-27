@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Prefab References
     /// </summary>
-    public GameObject PrefabPlayer, PrefabGoal, PrefabMainPulse, PrefabPlayerCam, PrefabGround, PrefabGameLight;
+    public GameObject PrefabPlayer, PrefabGoal, PrefabMainPulse, PrefabPlayerCam, PrefabGround, PrefabGameLight, PrefabLevelBlock;
 
     /// <summary>
     /// Instance references
