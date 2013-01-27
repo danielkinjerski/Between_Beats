@@ -238,6 +238,7 @@ public class GameManager : MonoBehaviour
     void SkipTutorial()
     {
         scaleFormCamera.hud.CloseTutorialMenu();
+        MainPulse.GetComponentInChildren<AudioSource>().enabled = false;
         LoadNextLevel();
     }
 
