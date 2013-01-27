@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelGenerator : ScriptableObject {
 	
@@ -10,64 +11,61 @@ public class LevelGenerator : ScriptableObject {
 		{ 
 		 if (_instance == null)
          {
-            _instance = new Singleton();
+            _instance = new LevelGenerator();
          }
          return _instance;
 		}
 	}
 	
-	public int currentLevel;
-	public float distancePerLevel;
+	float distancePerLevel = 30.0f;
 	
-	public GameObject blockPrefab;
-	public GameObject finishNode;
-	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
-	public void GenerateLevel(int level)
+	void placeBlock( List<GameObject> pieces ,int index )
 	{
-		currentLevel = level;
+		//get a location within the play area
+		Vector2 dir = new Vector2(Random.Range(-1,1), Random.Range(-1,1));
+		dir.Normalize();
+		Vector3 pos = new Vector3(dir.x * (Random.Range(5, distancePerLevel + 30)), 0 , dir.y * (Random.Range(5, distancePerLevel+30)));
 		
-		int blocksToGenerate = Random.Range(0, currentLevel * 5);
 		
-		for(int i = 0; i < blocksToGenerate; i++)
+		//place the block and check if its colliding with anything
+		pieces[index].transform.position = pos;
+		for(int i = 0; i < pieces.Count ;i++)
 		{
-			Vector2 dir = new Vector2(Random.Range(-1,1), Random.Range(-1,1));
-			dir.Normalize();
-			Vector3 pos = new Vector3(dir.x * (Random.Range(5, distancePerLevel + 30)), 0 , dir.y * (Random.Range(5, distancePerLevel+30)));
-			
-			RaycastHit hit;
-			if(Physics.Raycast(new Vector3(pos.x, 20, pos.z), hit, 40))
+			if(i != index)
 			{
-				if(hit.collider.tag != "block")
+				if(	pieces[index].collider.bounds.Intersects(pieces[i].collider.bounds))
 				{
-					Instantiate(blockPrefab, pos, blockPrefab.transform.rotation); 
+					placeBlock(pieces, index);
 				}
 			}
+		}
+	}
+	
+	public void GenerateLevel(int level, List<GameObject> pieces, GameObject finishNode)
+	{
+		foreach (GameObject piece in pieces) {
+			piece.transform.position = Vector3.one * 55555;
+		}
+		
+		for(int i = 0; i < pieces.Count; i++)
+		{
+			placeBlock(pieces, i);
 		}
 		
 		bool finishNotPlaced = true;
 		while(finishNotPlaced)
 		{
-			dir = new Vector2(Random.Range(-1,1), Random.Range(-1,1));
+			Vector2 dir = new Vector2(Random.Range(-1,1), Random.Range(-1,1));
 			dir.Normalize();
-			pos = new Vector3(dir.x * distancePerLevel , 0 , dir.y * distancePerLevel);
+			Vector3 pos = new Vector3(dir.x * distancePerLevel , 0 , dir.y * distancePerLevel);
 			
-			RaycastHit hit;
-			if(Physics.Raycast(new Vector3(pos.x, 20, pos.z), hit, 40))
+			RaycastHit hit = new RaycastHit();
+			if(Physics.Raycast(new Vector3(pos.x, 20, pos.z), Vector3.down, out hit, 40))
 			{
 				if(hit.collider.tag != "block")
 				{
-					Instantiate(finishNode, pos, finishNode.transform.rotation);
-					finisheNotPlaced = false;
+					finishNode.transform.position = pos;
+					finishNotPlaced = false;
 				}
 			}
 		}
