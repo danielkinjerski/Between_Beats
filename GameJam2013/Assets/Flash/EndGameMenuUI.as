@@ -6,6 +6,7 @@
     import scaleform.clik.constants.InvalidationType;
     import scaleform.clik.controls.Button;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	
 	
 	public class EndGameMenuUI extends UIMenu {
@@ -29,9 +30,11 @@
 		public function OnMainMenuButtonClick(e:MouseEvent)
 		{
 			//
-			(root as UIManager).MainMenu();
+			ExternalInterface.call("OnStartButtonClick");
+			(root as UIManager).CloseMainMenu();
+			(root as UIManager).OpenHUD();
 			(root as UIManager).CloseEndGameMenu();
-			(root as UIManager).OpenMainMenu();
+			
 		}
 		
 		
