@@ -59,12 +59,13 @@ public class LoopScale : MonoBehaviour {
         trans = this.transform;
         catchPulse = CatchPulse.WaitingForPulse;
         reachedCrest = false;
-        x = 0;
-        if (GameManager.gameState == GameState.Tutorial)
+        if (MainPulse)
+            x = 0;
+        if (GameManager.gameState != GameState.Tutorial)
         {
             b = 3;
+            audio.pitch = 3;
         }
-		GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
     }
 	
 	
@@ -96,9 +97,14 @@ public class LoopScale : MonoBehaviour {
             reachedCrest = true;
         }
 
-        if (GameManager.gameState == GameState.Tutorial)
+        if (GameManager.gameState == GameState.Tutorial && audio.enabled)
         {
             b = Mathf.Lerp(b, 1, .001f);
+            audio.pitch = Mathf.Lerp(audio.pitch, 1, .001f);
+            if (audio.pitch < 1.35f)
+            {
+                audio.enabled = false;
+            }
         }
     }
 
@@ -111,9 +117,9 @@ public class LoopScale : MonoBehaviour {
 
     public void Initialize(float _spd)
     {
-        a = 100;
-        z = 100;
+        audio.enabled = false;
         applySpeed = _spd;
+        GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
         Start();
     }
 }
