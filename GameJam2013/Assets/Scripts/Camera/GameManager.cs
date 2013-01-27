@@ -9,7 +9,8 @@ public enum GameState
     OpeningWindow = 1,
     PlayGame = 2,
     GameOver = 3,
-    Pause = 4
+    Transitioning = 4,
+    Pause = 5
 }
 #endregion
 
@@ -67,7 +68,7 @@ public class GameManager : MonoBehaviour
 		
     }	
 
-    ~GameManager()
+    void OnDestroy()
     {
         Object.Destroy(Player);
         Object.Destroy(Goal);
@@ -173,6 +174,12 @@ public class GameManager : MonoBehaviour
 		scaleFormCamera.hud.OpenEndGameMenu();
 		menuOpen = true;
     }
+
+    public void NewLevelText()
+    {
+        scaleFormCamera.hud.OpenHUD();
+    }
+
     #endregion
 
     #region Utilities
@@ -180,7 +187,9 @@ public class GameManager : MonoBehaviour
     void ManageObstacles()
     {
         if (Ground == null)
+        {
             Ground = GameObject.Instantiate(PrefabGround, Vector3.zero, Quaternion.identity) as GameObject;
+        }
 
         switch (levelsCompleted)
         {
@@ -200,18 +209,10 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Reload first level.");
                 break;
         }
-
-
-
     }
 
     void LoadNextLevel()
     {
-        ChooseGoalLocation();
-        LoadObstacles();
-        SetUpMainPulse();
-        ManageObstacles();
-
         // If this is the first game - initialize our player
         if (Player == null)
         {
@@ -225,31 +226,39 @@ public class GameManager : MonoBehaviour
             Player.transform.position = PrefabPlayer.transform.position;
         }
 
+        ChooseGoalLocation();
+        LoadObstacles();
+        SetUpMainPulse();
+        ManageObstacles();
+        NewLevelText();
+
         if (GameLight == null)
             GameLight = GameObject.Instantiate(PrefabGameLight, PrefabGameLight.transform.position,  PrefabGameLight.transform.rotation) as GameObject;
+
+        gameState = GameState.PlayGame;
     }
 
     void ChooseGoalLocation()
     {
         Vector3 pos = Vector3.zero;
         
-        Debug.Log("Doing good.");
+        Debug.Log("NEW GOAL.");
         switch (levelsCompleted)
         {
             case 0:
-                Debug.Log("Load first level.");
+                //Debug.Log("Load first level.");
                 pos = PrefabGoal.transform.position;
                 break;
             case 1:
-                Debug.Log("Get harder.");
+                //Debug.Log("Get harder.");
                 break;
             case 2:
-                Debug.Log("Get difficult.");
+                //Debug.Log("Get difficult.");
                 break;
             case 3:
                 break;
             default:
-                Debug.Log("UNBEATABLE.");
+                //Debug.Log("UNBEATABLE.");
                 break;
         }
 
@@ -258,6 +267,8 @@ public class GameManager : MonoBehaviour
             Goal = GameObject.Instantiate(PrefabGoal, pos, Quaternion.identity) as GameObject;
             Goal.GetComponentInChildren<Goal>().manager = this.gameObject;
         }
+
+        Goal.GetComponentInChildren<Goal>().Initialize();
     }
 
     void LoadObstacles()
@@ -268,13 +279,13 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Lucky you - no obstacles.");
                 break;
             case 1:
-                Debug.Log("Get harder.");
+                //Debug.Log("Get harder.");
                 break;
             case 2:
-                Debug.Log("Get difficult.");
+                //Debug.Log("Get difficult.");
                 break;            
             default:
-                Debug.Log("UNBEATABLE.");
+                //Debug.Log("UNBEATABLE.");
                 break;
         }
     }
@@ -294,7 +305,10 @@ public class GameManager : MonoBehaviour
 
     void OnReachedLevelGoal()
     {
-        Debug.Log("Doing good.");
+        if (gameState == GameState.Transitioning)
+            return;
+        gameState = GameState.Transitioning;
+        //Debug.Log("Doing good.");
         levelsCompleted++;
         LoadNextLevel();
     }
