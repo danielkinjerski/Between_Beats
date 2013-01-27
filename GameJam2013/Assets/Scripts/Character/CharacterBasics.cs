@@ -116,7 +116,7 @@ public class CharacterBasics : MonoBehaviour
                 if (!anim.IsPlaying(walk))
 				{
                     anim.Play(walk);
-					GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Run");
+					//GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Run");
 				}
                 //if we are already playing out anim ;; wait till its over, then play again
                 else if (!anim.isPlaying)
