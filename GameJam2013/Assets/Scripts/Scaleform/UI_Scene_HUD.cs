@@ -148,6 +148,13 @@ public class UI_Scene_HUD : Movie
 		//this is where we remove the tutorial menu and continue on
 		
 	}
+	
+	public void Destroy()
+	{
+		CloseEndGameMenu();
+		CloseMainMenu();
+		ClosePauseMenu();
+	}
 		
 	
 }

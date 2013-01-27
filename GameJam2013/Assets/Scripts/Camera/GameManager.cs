@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
         Object.Destroy(PlayerCam);
         Object.Destroy(Ground);
         Object.Destroy(GameLight);
+		scaleFormCamera.hud.OnExitGameCallback();
 
         levelsCompleted = 0;
         gameState = GameState.OpeningWindow;
