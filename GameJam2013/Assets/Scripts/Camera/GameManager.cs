@@ -200,7 +200,8 @@ public class GameManager : MonoBehaviour
 
     public void NewLevelText()
     {
-        //scaleFormCamera.hud.TransitionLevel(levelsCompleted+1);
+        scaleFormCamera.hud.OpenHUD();
+        scaleFormCamera.hud.TransitionLevel(levelsCompleted+1);        
     }
 
     #endregion
