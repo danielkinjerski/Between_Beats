@@ -9,6 +9,7 @@
 		public var _mainMenu:MainMenuUI;
 		public var _pauseMenu:PauseMenuUI;
 		public var _endGameMenu:EndGameMenuUI;
+		public var _tutorialMenu:TutorialMenu;
 		public var _hudUI:HUDUI;
 		
 		public var paused:Boolean = false;
@@ -60,6 +61,29 @@
 			{
 				_mainMenu.visible = false;
 			}
+		}
+		
+		public function OpenTutorialMenu()
+		{
+			if (_tutorialMenu == null)
+			{
+				_tutorialMenu = new TutorialMenu();
+				addChild(_tutorialMenu);
+			}
+			else
+			{
+				_tutorialMenu.visible = true;
+			}
+		}
+		
+		public function CloseTutorialMenu()
+		{
+			if (_tutorialMenu != null)
+			{
+				_tutorialMenu.visible = false;
+				removeChild(_tutorialMenu);
+			}
+			
 		}
 		
 		public function OpenPauseMenu()
