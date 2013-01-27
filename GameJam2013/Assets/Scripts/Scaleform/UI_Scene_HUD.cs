@@ -107,6 +107,10 @@ public class UI_Scene_HUD : Movie
 		Invoke("root.OpenEndGameMenu", null, 0);
 	}
 	
+	public void OpenTutorialMenu()
+	{
+		Invoke("root.OpenTutorialMenu", null, 0);
+	}
 	
 	public void ClosePauseMenu()
 	{
@@ -137,6 +141,12 @@ public class UI_Scene_HUD : Movie
 		Value adjust = new Value(delta, MovieID);
         Value[] args = { frameVal, adjust };
 		Invoke("root.HandelScrollPress", args, 2);
+	}
+	
+	public void TutorialComplete()
+	{
+		//this is where we remove the tutorial menu and continue on
+		
 	}
 		
 	
