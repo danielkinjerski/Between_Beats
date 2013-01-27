@@ -231,7 +231,7 @@ public class GameManager : MonoBehaviour
 		{
 			if (audioLookUp.ContainsKey(audioToPlay))
 			{
-			    PlayerCam.audio.PlayOneShot(audioClips[audioLookUp[audioToPlay]]);
+			    PlayerCam.audio.PlayOneShot(audioClips[audioLookUp[audioToPlay]], 4);
 			}
 			else
 			{
