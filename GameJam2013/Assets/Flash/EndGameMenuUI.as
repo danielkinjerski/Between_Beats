@@ -30,7 +30,8 @@
 		public function OnMainMenuButtonClick(e:MouseEvent)
 		{
 			//
-			ExternalInterface.call("OnStartButtonClick");
+			ExternalInterface.call("OnReplay");
+			
 			(root as UIManager).CloseMainMenu();
 			(root as UIManager).OpenHUD();
 			(root as UIManager).CloseEndGameMenu();
