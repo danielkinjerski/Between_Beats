@@ -135,6 +135,13 @@ public class UI_Scene_HUD : Movie
 		Invoke("root.ConfirmPressed", args, 1);
 	}
 	
+	public void TransitionLevel(int level)
+	{
+		Value frameVal = new Value(level, MovieID);
+        Value[] args = { frameVal };
+		Invoke("root.TransitionLevel", args, 1);
+	}
+	
 	public void HandelScrollPress(string tempStr, float delta)
 	{
 		Value frameVal = new Value(tempStr, MovieID);
@@ -147,6 +154,13 @@ public class UI_Scene_HUD : Movie
 	{
 		//this is where we remove the tutorial menu and continue on
 		
+	}
+	
+	public void Destroy()
+	{
+		CloseEndGameMenu();
+		CloseMainMenu();
+		ClosePauseMenu();
 	}
 		
 	

@@ -72,6 +72,7 @@ public class ScaleformCamera : SFCamera {
 		if (hud != null)
 		{
 			SFMgr.DestroyMovie(hud);
+			hud.Destroy();
 			hud = null; // @TODO: Need some sort of replacement for this if it won't work.
 		}
 	}

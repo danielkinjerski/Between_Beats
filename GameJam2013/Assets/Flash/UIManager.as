@@ -63,6 +63,11 @@
 			}
 		}
 		
+		public function TransitionLevel(level:int)
+		{
+			this._hudUI.ShowLevel(level);
+		}
+		
 		public function OpenTutorialMenu()
 		{
 			if (_tutorialMenu == null)
