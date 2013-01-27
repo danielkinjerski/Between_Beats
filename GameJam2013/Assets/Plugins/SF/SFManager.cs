@@ -830,7 +830,7 @@ public partial class SFManager
 
 		if (ScreenWidth != NewScreenWidth || ScreenHeight != NewScreenHeight)
 		{
-			UnityEngine.Debug.Log("ScreenWidth = " + NewScreenWidth + "ScreenHeight = " + NewScreenHeight);
+			//UnityEngine.Debug.Log("ScreenWidth = " + NewScreenWidth + "ScreenHeight = " + NewScreenHeight);
 			ScreenHeight = NewScreenHeight;
 			ScreenWidth  = NewScreenWidth; 
 			SF_SetNewViewport(ox, oy, ScreenWidth, ScreenHeight);

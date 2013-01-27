@@ -1,6 +1,14 @@
 using UnityEngine;
 using System.Collections;
 
+public enum CatchPulse
+{
+    WaitingForPulse,
+    LoadingCharacter,
+    Pulse
+
+}
+
 public class LoopScale : MonoBehaviour {
 
 
@@ -35,39 +43,73 @@ public class LoopScale : MonoBehaviour {
     /// <summary>
     /// this is how far the curve has been traversed
     /// </summary>
-    private float x = 0;
+    public float x = 0;
 
-    float period = 0;
+    public float applySpeed = 1;
+    public CatchPulse catchPulse = CatchPulse.Pulse;
+
+    public bool MainPulse = false;
+
+    public bool reachedCrest = false;
 
     #endregion
 
 	// Use this for initialization
 	void Start () {
         trans = this.transform;
-		
-		
-		float y = -z/a;
-		y = 1/Mathf.Sin(y);		
-        x = ((y * 100) / b) - c;
-	
-       // period = a * Mathf.Sin(b * x + c) + z;
-
-	}
+        catchPulse = CatchPulse.WaitingForPulse;
+        reachedCrest = false;
+        x = 0;
+        if (GameManager.gameState == GameState.Tutorial)
+        {
+            b = 3;
+        }
+		GameObject.FindGameObjectWithTag("GameManager").SendMessage("playOneShot", "Explosion");
+    }
 	
 	
 
     // Update is called once per frame
     void LateUpdate()
     {
+        if (catchPulse == CatchPulse.LoadingCharacter)
+            return;
+
         //y = z+ a * sin(bx + c)
-        transform.localScale = Vector3.one * (z + a * Mathf.Sin(b * (x/100) + c));
+        trans.localScale = Vector3.one * (z + a * Mathf.Sin(b * (x / 100) + c));
 		x = (x + 1);
-      
+
+
+        if (GameManager.gameState == GameState.PlayGame && MainPulse && catchPulse == CatchPulse.WaitingForPulse && trans.localScale.magnitude < 1)
+        {
+            catchPulse = CatchPulse.LoadingCharacter;
+            Debug.Log("SENDING LOAD PLAYER");
+            GameObject.FindGameObjectWithTag("GameManager").SendMessage("LoadPlayer");
+            b = applySpeed;
+            x = 420;
+            reachedCrest = false;
+            
+        }
+        if (catchPulse == CatchPulse.Pulse && !reachedCrest && trans.localScale.magnitude > a + z)
+        {
+            print(trans.localScale.magnitude);
+            reachedCrest = true;
+        }
+
+        if (GameManager.gameState == GameState.Tutorial)
+        {
+            b = Mathf.Lerp(b, 1, .001f);
+        }
     }
 
-
-    public void SetTarget()
+    public void UnlockPulse()
     {
+        catchPulse = CatchPulse.Pulse;
+    }
 
+    public void Initialize(float _spd)
+    {
+        applySpeed = _spd;
+        Start();
     }
 }

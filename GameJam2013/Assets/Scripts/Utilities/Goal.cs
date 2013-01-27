@@ -7,19 +7,31 @@ public class Goal : MonoBehaviour {
     public bool reached = false;
 
 	// Use this for initialization
-	void OnTriggerEnter () {
+	void OnTriggerEnter (Collider other) {
+
+        if (other.tag != "Player")
+            return;
+
+        //if (this.enabled && GameManager.gameState == GameState.PlayGame)
+        //{
+        //    reached = false;
+        //    Debug.Log("renale");
+        //}
+
+
         if (manager != null && !reached && GameManager.gameState == GameState.PlayGame)
         {
-            manager.SendMessage("OnReachedLevelGoal");
-            this.enabled = false;
+            manager.GetComponent<GameManager>().OnReachedLevelGoal();
+            Debug.Log("hit goal" + other.gameObject.name);
             reached = true;
+            //Destroy(this);
+            //this.enabled = false;
         }
 	}
 
-    public void Initialize()
+    public void Reset()
     {
         reached = false;
-        Debug.Log("INIT");
     }
 	
 }
