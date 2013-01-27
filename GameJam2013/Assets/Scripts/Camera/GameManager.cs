@@ -243,16 +243,17 @@ public class GameManager : MonoBehaviour
     void OpeningScene()
     {
         gameState = GameState.Tutorial;
+
         SetUpMainPulse();
         LoadBasicLevelElements();
-
+        scaleFormCamera.hud.OpenTutorialMenu();
         MainPulse.GetComponentInChildren<LoopScale>().b = 15;
         MainPulse.GetComponentInChildren<LoopScale>().a = 10;
         MainPulse.GetComponentInChildren<LoopScale>().z = 0;
         
     }
 
-    void LoadNextLevel()
+    public void LoadNextLevel()
     {
         LoadObstacles();
         SetGoalLocation();

@@ -153,6 +153,7 @@ public class UI_Scene_HUD : Movie
 	public void TutorialComplete()
 	{
 		//this is where we remove the tutorial menu and continue on
+        gManager.LoadNextLevel();
 		
 	}
 	
