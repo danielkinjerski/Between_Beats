@@ -20,7 +20,7 @@ public class Splash : MonoBehaviour {
 	{
 		if(!betweenFades)
 		{
-			GUI.Label(new Rect(-10, -10, Screen.width + 10, Screen.height + 10), SplashScreens[currentMovie]);
+			GUI.DrawTexture(new Rect(-10, -10, Screen.width + 10, Screen.height + 10), SplashScreens[currentMovie]);
 		}
 	}
 	

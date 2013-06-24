@@ -99,8 +99,8 @@ public class LoopScale : MonoBehaviour {
 
         if (GameManager.gameState == GameState.Tutorial && audio != null && audio.enabled)
         {
-            b = Mathf.Lerp(b, 1, .001f);
-            audio.pitch = Mathf.Lerp(audio.pitch, 1, .001f);
+            b = Mathf.Lerp(b, 1, .0005f);
+            audio.pitch = Mathf.Lerp(audio.pitch, 1, .0005f);
             if (audio.pitch < 1.35f)
             {
                 audio.enabled = false;

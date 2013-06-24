@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Scaleform;
 
 #region Enums
 public enum GameState
@@ -11,7 +10,8 @@ public enum GameState
     GameOver = 3,
     Transitioning = 4,
     Tutorial = 5,
-    Pause = 6
+    GameWin = 6,
+    Pause = 7
 }
 #endregion
 
@@ -23,12 +23,12 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Prefab References
     /// </summary>
-    public GameObject PrefabPlayer, PrefabGoal, PrefabMainPulse, PrefabPlayerCam, PrefabGround, PrefabGameLight, PrefabLevelBlock;
+    public GameObject PrefabPlayer, PrefabGoal, PrefabMainPulse, PrefabPlayerCam, PrefabGround, PrefabGameLight, PrefabLevelBlock, PrefabUI;
 
     /// <summary>
     /// Instance references
     /// </summary>
-    private GameObject Player, Goal, MainPulse, PlayerCam, Ground, GameLight;
+    private GameObject Player, Goal, MainPulse, PlayerCam, Ground, GameLight, GameUI;
 
     /// <summary>
     /// Blocks and stuff
@@ -41,14 +41,9 @@ public class GameManager : MonoBehaviour
     public static GameState gameState = GameState.OpeningWindow;
 
     /// <summary>
-    /// Yeah scaleform, should replace with NGUI asap
-    /// </summary>
-	public ScaleformCamera scaleFormCamera;
-
-    /// <summary>
     /// enable cheats, no death etc.
     /// </summary>
-    public bool cheats, menuOpen;
+    public bool cheats;
 
     /// <summary>
     /// internal bools for not screwing up
@@ -100,9 +95,16 @@ public class GameManager : MonoBehaviour
         gameState = GameState.OpeningWindow;
         Random.seed = (int)Time.time;
         levelsCompleted = 0;
-		menuOpen = true;
         PlayerCam = GameObject.Instantiate(PrefabPlayerCam, PrefabPlayerCam.transform.position, PrefabPlayerCam.transform.rotation) as GameObject;
-        scaleFormCamera = PlayerCam.GetComponent<ScaleformCamera>();
+        GameUI = GameObject.Instantiate(PrefabUI, PrefabUI.transform.position, PrefabUI.transform.rotation) as GameObject;
+
+        UIButtonMessage[] msgs = GameUI.GetComponentsInChildren<UIButtonMessage>();
+
+        foreach (UIButtonMessage msg in msgs)
+        {
+            msg.target = this.gameObject;
+        }
+
 				
 		//build our sound look up table
 		int counter = 0;
@@ -133,7 +135,6 @@ public class GameManager : MonoBehaviour
                 case GameState.OpeningWindow:
 
                 case GameState.Pause:
-                    scaleFormCamera.hud.HandelConfirmPress(gameState.ToString());
                     break;
             }
         }
@@ -171,53 +172,48 @@ public class GameManager : MonoBehaviour
     public void BackToMain()
     {
         Application.LoadLevel(Application.loadedLevel);
-		scaleFormCamera.hud.OpenMainMenu();
 		gameState = GameState.OpeningWindow;
-		menuOpen = true;
     }
 
     public void Play()
     {
         gameState = GameState.Transitioning;
-		//scaleFormCamera.hud.OpenHUD();
-		menuOpen = false;
-
         //...LOADING...
-        OpeningScene();//NewLevelText();
+        OpeningScene();
     }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void ReloadLevel()
+    {
+        levelsCompleted--;
+        OnReachedLevelGoal();
+    }
+
     void TogglePause()
     {
 		if(gameState == GameState.Pause)
 		{
             gameState = GameState.PlayGame;
-			scaleFormCamera.hud.ClosePauseMenu();
-			menuOpen = false;
 		}
 		else
 		{
 			gameState = GameState.Pause;
-			scaleFormCamera.hud.PauseGame();
-			menuOpen = true;
 		}
        
     }
 	
-	public void ResumeGame()
-	{
-		gameState = GameState.PlayGame;
-		menuOpen = false;
-	}
     public void GameOver()
     {
         gameState = GameState.GameOver;
-		scaleFormCamera.hud.OpenEndGameMenu();
-		menuOpen = true;
     }
 
     public void NewLevelText()
     {
-        scaleFormCamera.hud.OpenHUD();
-        scaleFormCamera.hud.TransitionLevel(levelsCompleted+1);        
+        //scaleFormCamera.hud.TransitionLevel(levelsCompleted+1);        
     }
 
     #endregion
@@ -226,7 +222,6 @@ public class GameManager : MonoBehaviour
 
     void SkipTutorial()
     {
-        scaleFormCamera.hud.CloseTutorialMenu();
         MainPulse.GetComponentInChildren<AudioSource>().enabled = false;
         LoadNextLevel();
     }
@@ -253,7 +248,6 @@ public class GameManager : MonoBehaviour
 
         SetUpMainPulse();
         LoadBasicLevelElements();
-        scaleFormCamera.hud.OpenTutorialMenu();
         MainPulse.GetComponentInChildren<LoopScale>().b = 15;
         MainPulse.GetComponentInChildren<LoopScale>().a = 10;
         MainPulse.GetComponentInChildren<LoopScale>().z = 0;
@@ -266,7 +260,6 @@ public class GameManager : MonoBehaviour
         LoadObstacles();
         SetGoalLocation();
         SetUpMainPulse();
-        NewLevelText();
         LoadBasicLevelElements();
 
         gameState = GameState.PlayGame;
@@ -413,8 +406,7 @@ public class GameManager : MonoBehaviour
 
         if (levelsCompleted >= maxNumberOfLevels)
         {
-            gameState = GameState.GameOver;
-            scaleFormCamera.hud.OpenEndGameMenu();
+            gameState = GameState.GameWin;
             return;
         }
         PlayerCam.SendMessage("StopCam");
